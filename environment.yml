@@ -1,0 +1,21 @@
+# name: poetry21
+channels:
+  - defaults
+  - conda-forge
+  - huggingface
+  - pytorch
+dependencies:
+  - python=3.8
+  - nodejs
+  - jupyterlab>=3.0
+  - pip
+  - sentencepiece
+  - transformers==4.0.1
+  - nlp
+  - psutil
+  # - pytorch::pytorch
+  # - pytorch::torchvision
+  # - pytorch::torchaudio
+  # - pytorch::cpuonly
+  - pip:
+    - tokenizers==0.10.0rc1

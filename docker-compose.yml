@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  conda:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/workspace
+    command:
+      - bash
