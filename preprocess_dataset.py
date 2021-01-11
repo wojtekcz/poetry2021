@@ -42,6 +42,17 @@ def print_head(file_path, n_lines=21):
 
 print_head(fn_corpus_char)
 
+
+class Stemmer:
+    # Dzielimy korpus na sylaby programem `stemmer`.
+    @staticmethod
+    def stem_file(fn_corpus_caps, fn_corpus_syl, s_opts=7683):
+        platform_suffixes = {'Linux': 'linux', 'Darwin': 'macos'}
+        platform_suffix = platform_suffixes[platform.system()]
+        stemmer_bin = f'LD_PRELOAD="" bin/stemmer.{platform_suffix}'
+        os.system(f'{stemmer_bin} -s {s_opts} -v -d bin/stemmer2.dic -i {fn_corpus_caps} -o {fn_corpus_syl}')
+
+
 class TextProcessor:
 
     def __init__(self):
@@ -67,15 +78,6 @@ class TextProcessor:
         corpus_lines = [x.strip() for x in corpus_tmp.split('\n')]
         corpus_tmp = '\n'.join(corpus_lines)
         fn_corpus_caps.open('w').write(corpus_tmp)
-
-    # Dzielimy korpus na sylaby programem `stemmer`.
-    # TODO: extract stemmer to a class
-    @staticmethod
-    def stem_file(fn_corpus_caps, fn_corpus_syl, s_opts=7683):
-        platform_suffixes = {'Linux': 'linux', 'Darwin': 'macos'}
-        platform_suffix = platform_suffixes[platform.system()]
-        stemmer_bin = f'LD_PRELOAD="" bin/stemmer.{platform_suffix}'
-        os.system(f'{stemmer_bin} -s {s_opts} -v -d bin/stemmer2.dic -i {fn_corpus_caps} -o {fn_corpus_syl}')
 
     def tokenize(self, s, repl_unk=True): 
         strings = self.re_tok.sub(r' \1 ', s).replace('\n', ' _eol_ ').split()
@@ -129,7 +131,7 @@ class TextProcessor:
 
         text = self.do_caps(text)
         fn_tmp_text_caps.open('w').write(text)
-        self.stem_file(fn_tmp_text_caps, fn_tmp_text_syl)
+        Stemmer.stem_file(fn_tmp_text_caps, fn_tmp_text_syl)
         text_syl = fn_tmp_text_syl.open('r').read()
 
         # kill last \n eol char possibly added by stemmer
@@ -215,7 +217,7 @@ pt_processor.do_caps_file(fn_corpus_char, fn_corpus_caps)
 print_head(fn_corpus_caps)
 
 # Podział korpusu na sylaby
-pt_processor.stem_file(fn_corpus_caps, fn_corpus_syl)
+Stemmer.stem_file(fn_corpus_caps, fn_corpus_syl)
 print_head(fn_corpus_syl)
 
 # Załadowanie do pamięci i tokenizacja
