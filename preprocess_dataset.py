@@ -29,8 +29,6 @@ from tqdm import tqdm
 
 # Preprocessing korpusu
 dataset_path =   Path('data')/'pan_tadeusz'
-tmp_path = dataset_path / 'tmp'
-tmp_path.mkdir(parents=True, exist_ok=True)
 
 fn_corpus_char = dataset_path/'pan_tadeusz.txt'
 fn_corpus_caps = dataset_path/'pan_tadeusz.caps1.txt'
@@ -46,7 +44,7 @@ print_head(fn_corpus_char)
 class Stemmer:
     # Dzielimy korpus na sylaby programem `stemmer`.
     @staticmethod
-    def stem_file(fn_corpus_caps, fn_corpus_syl, s_opts=7683):
+    def stem_file(fn_corpus_caps: Path, fn_corpus_syl: Path, s_opts=7683):
         platform_suffixes = {'Linux': 'linux', 'Darwin': 'macos'}
         platform_suffix = platform_suffixes[platform.system()]
         stemmer_bin = f'LD_PRELOAD="" bin/stemmer.{platform_suffix}'
@@ -55,23 +53,24 @@ class Stemmer:
 
 class TextProcessor:
 
-    def __init__(self):
-        pass
+    def __init__(self, dataset_path: Path):
+        self.tmp_path = dataset_path / 'tmp'
+        self.tmp_path.mkdir(parents=True, exist_ok=True)
 
     # Zamieniamy duże litery na małe dodając tokeny `_up_` (dla wyrazów pisanych wielkimi literami) lub `_cap_` (dla wyrazów pisanych z wielkiej litery).
     @staticmethod
-    def do_caps(ss):
-        TOK_UP,TOK_CAP = ' _up_ ', ' _cap_ '
+    def do_caps(a_str: str) -> str:
+        TOK_UP, TOK_CAP = ' _up_ ', ' _cap_ '
         res = []
         # re_word = re.compile('\w')
-        for s in re.findall(r'\w+|\W+', ss):
+        for s in re.findall(r'\w+|\W+', a_str):
             res += ([TOK_UP,s.lower()] if (s.isupper() and (len(s)>2))
                     else [TOK_CAP,s.lower()] if s.istitle()
                     else [s.lower()])
         return ''.join(res)
 
     @staticmethod
-    def do_caps_file(fn_corpus_char, fn_corpus_caps):
+    def do_caps_file(fn_corpus_char: Path, fn_corpus_caps: Path):
         corpus_tmp = fn_corpus_char.open('r').read()
         corpus_tmp = __class__.do_caps(corpus_tmp)
         # trim lines
@@ -79,14 +78,14 @@ class TextProcessor:
         corpus_tmp = '\n'.join(corpus_lines)
         fn_corpus_caps.open('w').write(corpus_tmp)
 
-    def tokenize(self, s, repl_unk=True): 
-        strings = self.re_tok.sub(r' \1 ', s).replace('\n', ' _eol_ ').split()
+    def tokenize(self, a_str: str, repl_unk=True) -> [str]: 
+        strings = self.re_tok.sub(r' \1 ', a_str).replace('\n', ' _eol_ ').split()
         if repl_unk:
             strings = [self.str2tok(s) for s in strings]
         return strings
 
     # Ładujemy korpus do pamięci i tokenizujemy. Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `_unk_` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
-    def load_and_tokenize_file(self, fn_corpus_syl):
+    def load_and_tokenize_file(self, fn_corpus_syl: Path):
         """
         outputs:
             re_tok
@@ -118,16 +117,16 @@ class TextProcessor:
 
         self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(self.all_tokens)}
 
-    def str2tok(self, str) -> int:
-        return str if self.tok2idx_dict.get(str, 0) else '<unk>'
+    def str2tok(self, a_str: str) -> str:
+        return a_str if self.tok2idx_dict.get(a_str, 0) else '<unk>'
 
-    def tok2idx(self, tok) -> int:
+    def tok2idx(self, tok: str) -> int:
         return self.tok2idx_dict.get(tok, 0)
 
     # Przyda nam się funkcja do zakodowania dowolnego tekstu na listę zsylabizowanych tokenów:
-    def str2syl2tok(self, text):  
-        fn_tmp_text_caps = Path(tmp_path / 'tmp_text_caps1.txt')
-        fn_tmp_text_syl = Path(tmp_path / 'tmp_text_syl1.txt')
+    def str2syl2tok(self, text: str) -> [str]:  
+        fn_tmp_text_caps = self.tmp_path / 'tmp_text_caps1.txt'
+        fn_tmp_text_syl = self.tmp_path / 'tmp_text_syl1.txt'
 
         text = self.do_caps(text)
         fn_tmp_text_caps.open('w').write(text)
@@ -143,7 +142,7 @@ class TextProcessor:
 
     # Funkcje pomocnicze do zdekodowania listy tokenów na tekst:
     @staticmethod
-    def syl2str(a_list, delim='/'): 
+    def syl2str(a_list: [str], delim='/') -> str:
         s = ' '.join(a_list)
 
         repl_list = [
@@ -155,7 +154,7 @@ class TextProcessor:
         return s
 
     @staticmethod
-    def decode_tokens(e_str):
+    def do_uncaps_tokens(e_str: str) -> str:
         # decode _eol_, _cap_ and _up_
         # leave <unk> token alone
         # kill <s> and </s>
@@ -178,7 +177,7 @@ class TextProcessor:
         return ' '.join(e_syl2)
 
     @staticmethod
-    def fix_punctuation(s): 
+    def fix_punctuation(s: str) -> str: 
         repl_list = [
             ('\n ', '\n'), 
             (' ,', ','),
@@ -210,10 +209,10 @@ class TextProcessor:
         return TextProcessor.X(e_str).rpl('/').rpl('--', c='red').rpl('++', c='red').rpl2('\n', '\n<br/>')
 
 # Plik wejściowy (korpus) to duży plik tekstowy. 
-pt_processor = TextProcessor()
+processor = TextProcessor(dataset_path)
 
 # Tokenizacja wielkich liter
-pt_processor.do_caps_file(fn_corpus_char, fn_corpus_caps)
+processor.do_caps_file(fn_corpus_char, fn_corpus_caps)
 print_head(fn_corpus_caps)
 
 # Podział korpusu na sylaby
@@ -222,22 +221,19 @@ print_head(fn_corpus_syl)
 
 # Załadowanie do pamięci i tokenizacja
 # TODO: decouple tokenization, also save all tokens
-pt_processor.load_and_tokenize_file(fn_corpus_syl)
+processor.load_and_tokenize_file(fn_corpus_syl)
 
 tekst = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
-tekst_tok = pt_processor.str2syl2tok(tekst); print(tekst_tok)
+tekst_tok = processor.str2syl2tok(tekst); print(tekst_tok)
 
-print(pt_processor.syl2str(tekst_tok))
-print(pt_processor.decode_tokens(pt_processor.syl2str(tekst_tok, delim=''))[:300])
-print(pt_processor.fix_punctuation(pt_processor.decode_tokens(pt_processor.syl2str(tekst_tok, delim='')))[:300])
+print(processor.syl2str(tekst_tok))
+print(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim=''))[:300])
+print(processor.fix_punctuation(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim='')))[:300])
 
-e_str = pt_processor.fix_punctuation(pt_processor.decode_tokens(pt_processor.syl2str(tekst_tok, delim='')))[:400]
-e_html = pt_processor.format_html(e_str); print(e_html)
+e_str = processor.fix_punctuation(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim='')))[:400]
+e_html = processor.format_html(e_str); print(e_html)
 
 # Sample chunk_len token-sized chunks to a file
-
-# sample chunks into line by line dataset
-
 chunk_len = 100 #400
 
 # def random_chunk():
@@ -245,8 +241,8 @@ chunk_len = 100 #400
 #     end_index = start_index + chunk_len + 1
 #     return file_tok[start_index:end_index]
   
-n_samples = pt_processor.file_tok_len // chunk_len
-print(n_samples, pt_processor.file_tok_len)
+n_samples = processor.file_tok_len // chunk_len
+print(n_samples, processor.file_tok_len)
 
 
 flatten = lambda t: [item for sublist in t for item in sublist]
@@ -286,7 +282,7 @@ class LineChunker:
         return flatten(self.file_lines_tok[start_index:end_index])
 
 
-line_chunker = LineChunker(file_tok=pt_processor.file_tok, chunk_len=chunk_len)
+line_chunker = LineChunker(file_tok=processor.file_tok, chunk_len=chunk_len)
 
 # Let's make dataset with more than minimum n_samples
 n_samples = max(50000, n_samples); n_samples
