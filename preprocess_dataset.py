@@ -231,10 +231,6 @@ chunk_len = 100 #400
 #     start_index = random.randint(0, file_tok_len - chunk_len -1)
 #     end_index = start_index + chunk_len + 1
 #     return file_tok[start_index:end_index]
-  
-n_samples = processor.file_tok_len // chunk_len
-print(n_samples, processor.file_tok_len)
-
 
 flatten = lambda t: [item for sublist in t for item in sublist]
 
@@ -268,9 +264,11 @@ class LineChunker:
         return flatten(self.file_lines_tok[start_index:end_index])
 
 
+# Let's make dataset with more than minimum n_samples
 line_chunker = LineChunker(file_tok=processor.file_tok, chunk_len=chunk_len)
 
-# Let's make dataset with more than minimum n_samples
+n_samples = processor.file_tok_len // chunk_len
+# print(n_samples, processor.file_tok_len)
 n_samples = max(50000, n_samples); n_samples
 
 sampled_chunks = [" ".join(line_chunker.random_chunk()) for _ in range(n_samples)]
