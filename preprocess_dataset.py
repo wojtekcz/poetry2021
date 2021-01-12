@@ -54,6 +54,14 @@ class Stemmer:
 class TextProcessor:
 
     def __init__(self, dataset_path: Path):
+        # taken from fastai/text.py
+        # remove +,- chars from punctuation set to keep syllables e.g.'--PO++' intact
+        # remove _ char to keep tokens intact
+        # remove <,> chars to keep tokens intact
+        punctuation=re.sub('[_\\+-<>]', '', string.punctuation)
+        self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])')
+
+        self.dataset_path = dataset_path
         self.tmp_path = dataset_path / 'tmp'
         self.tmp_path.mkdir(parents=True, exist_ok=True)
 
@@ -84,37 +92,43 @@ class TextProcessor:
             strings = [self.str2tok(s) for s in strings]
         return strings
 
-    # Ładujemy korpus do pamięci i tokenizujemy. Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `_unk_` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
-    def load_and_tokenize_file(self, fn_corpus_syl: Path):
+    # Ładujemy korpus do pamięci i tokenizujemy.
+    def load_and_tokenize_file(self, fn_corpus_syl: Path, create_vocab=True):
         """
         outputs:
-            re_tok
             file_tok, file_tok_len
-            all_tokens, tok2idx_dict
         """
         a_file = open(fn_corpus_syl).read()
         file_len = len(a_file)
         print('file_len =', file_len)
 
-        # taken from fastai/text.py
-
-        # remove +,- chars from punctuation set to keep syllables e.g.'--PO++' intact
-        # remove _ char to keep tokens intact
-        # remove <,> chars to keep tokens intact
-        punctuation=re.sub('[_\\+-<>]', '', string.punctuation)
-        self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])')
-
-        self.file_tok = self.tokenize(a_file, repl_unk=False)
+        repl_unk = not create_vocab
+        self.file_tok = self.tokenize(a_file, repl_unk=repl_unk)
         print(len(self.file_tok), self.file_tok[:8])
         self.file_tok_len = len(self.file_tok)
 
+        if create_vocab:
+            self.create_vocab(self.file_tok)
+            self.save_vocab(self.dataset_path/'all_tokens.txt')
+
+    # Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `_unk_` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
+    def create_vocab(self, file_tok: [str]):
+        """
+        outputs:
+            all_tokens, tok2idx_dict
+        """
         spec_tokens = ['<unk>', '<pad>', '<mask>', '<s>', '</s>', '_eol_', '_cap_', '_up_']
+        all_tokens = []; all_tokens.extend(spec_tokens)
+        print('all_tokens: ', all_tokens)
+        all_tokens.extend(sorted(list(set([x for x in file_tok if not x in spec_tokens]))))
+        self.all_tokens = all_tokens
+        self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(all_tokens)}
 
-        self.all_tokens = []
-        self.all_tokens.extend(spec_tokens)
-        self.all_tokens.extend(sorted(list(set([x for x in self.file_tok if not x in spec_tokens]))))
-        n_tokens = len(self.all_tokens); print(n_tokens, self.all_tokens[:50])
+    def save_vocab(self, vocab_path: Path):
+        vocab_path.write_text(' '.join(self.all_tokens))
 
+    def load_vocab(self, vocab_path: Path):
+        self.all_tokens = vocab_path.read_text().split(' ')
         self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(self.all_tokens)}
 
     def str2tok(self, a_str: str) -> str:
