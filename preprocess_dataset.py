@@ -3,29 +3,11 @@
 
 # Załadowanie bibliotek
 from pathlib import Path
-import json
 import platform
 import string
 import random
 import re
 import os
-import psutil
-import pickle
-import warnings
-import torch
-import torch.nn as nn
-import time, math
-import numpy as np
-from tqdm import tqdm
-
-# from torch.autograd import Variable
-# import matplotlib.pyplot as plt
-# import matplotlib.ticker as ticker
-# %matplotlib inline
-
-# import matplotlib as mpl
-# mpl.style.use('default')
-# mpl.style.use('bmh')
 
 # Preprocessing korpusu
 dataset_path =   Path('data')/'pan_tadeusz'
