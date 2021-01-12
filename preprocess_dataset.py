@@ -30,7 +30,7 @@ class Stemmer:
         platform_suffixes = {'Linux': 'linux', 'Darwin': 'macos'}
         platform_suffix = platform_suffixes[platform.system()]
         stemmer_bin = f'LD_PRELOAD="" bin/stemmer.{platform_suffix}'
-        os.system(f'{stemmer_bin} -s {s_opts} -v -d bin/stemmer2.dic -i {fn_corpus_caps} -o {fn_corpus_syl}')
+        os.system(f'{stemmer_bin} -s {s_opts} -d bin/stemmer2.dic -i {fn_corpus_caps} -o {fn_corpus_syl}')
 
 
 class TextProcessor:
@@ -81,12 +81,8 @@ class TextProcessor:
             file_tok, file_tok_len
         """
         a_file = open(fn_corpus_syl).read()
-        file_len = len(a_file)
-        print('file_len =', file_len)
-
         repl_unk = not create_vocab
         self.file_tok = self.tokenize(a_file, repl_unk=repl_unk)
-        print(len(self.file_tok), self.file_tok[:8])
         self.file_tok_len = len(self.file_tok)
 
         if create_vocab:
@@ -101,7 +97,6 @@ class TextProcessor:
         """
         spec_tokens = ['<unk>', '<pad>', '<mask>', '<s>', '</s>', '_eol_', '_cap_', '_up_']
         all_tokens = []; all_tokens.extend(spec_tokens)
-        print('all_tokens: ', all_tokens)
         all_tokens.extend(sorted(list(set([x for x in file_tok if not x in spec_tokens]))))
         self.all_tokens = all_tokens
         self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(all_tokens)}
@@ -268,13 +263,8 @@ class LineChunker:
 
     def random_chunk(self):
         start_index = random.randint(0, self.last_line_index)
-        # print(f'len(file_lines_tok): {len(self.file_lines_tok)}, last_num_lines: {self.last_num_lines}, last_line_index: {self.last_line_index}')
-
         num_lines = self.count_tok_lines(self.file_lines_tok[start_index:], chunk_len=self.chunk_len)
         end_index = start_index + num_lines
-
-        # print(f'start_index: {start_index}, end_index: {end_index}')
-        # print(f'num_lines: {num_lines}')
         return flatten(self.file_lines_tok[start_index:end_index])
 
 
