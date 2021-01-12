@@ -9,19 +9,6 @@ import random
 import re
 import os
 
-# Preprocessing korpusu
-dataset_path =   Path('data')/'pan_tadeusz'
-
-fn_corpus_char = dataset_path/'pan_tadeusz.txt'
-fn_corpus_caps = dataset_path/'pan_tadeusz.caps1.txt'
-fn_corpus_syl = dataset_path/'pan_tadeusz.syl1.txt'
-fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
-
-def print_head(file_path, n_lines=21):
-    print('\n'.join(file_path.read_text().split('\n')[:n_lines]))
-
-print_head(fn_corpus_char)
-
 
 class Stemmer:
     # Dzielimy korpus na sylaby programem `stemmer`.
@@ -33,7 +20,7 @@ class Stemmer:
         os.system(f'{stemmer_bin} -s {s_opts} -d bin/stemmer2.dic -i {fn_corpus_caps} -o {fn_corpus_syl}')
 
 
-class TextProcessor:
+class TextTokenizer:
 
     def __init__(self, dataset_path: Path):
         # taken from fastai/text.py
@@ -59,35 +46,11 @@ class TextProcessor:
                     else [s.lower()])
         return ''.join(res)
 
-    @staticmethod
-    def do_caps_file(fn_corpus_char: Path, fn_corpus_caps: Path):
-        corpus_tmp = fn_corpus_char.open('r').read()
-        corpus_tmp = __class__.do_caps(corpus_tmp)
-        # trim lines
-        corpus_lines = [x.strip() for x in corpus_tmp.split('\n')]
-        corpus_tmp = '\n'.join(corpus_lines)
-        fn_corpus_caps.open('w').write(corpus_tmp)
-
     def tokenize(self, a_str: str, repl_unk=True) -> [str]: 
         strings = self.re_tok.sub(r' \1 ', a_str).replace('\n', ' _eol_ ').split()
         if repl_unk:
             strings = [self.str2tok(s) for s in strings]
         return strings
-
-    # Ładujemy korpus do pamięci i tokenizujemy.
-    def load_and_tokenize_file(self, fn_corpus_syl: Path, create_vocab=True):
-        """
-        outputs:
-            file_tok, file_tok_len
-        """
-        a_file = open(fn_corpus_syl).read()
-        repl_unk = not create_vocab
-        self.file_tok = self.tokenize(a_file, repl_unk=repl_unk)
-        self.file_tok_len = len(self.file_tok)
-
-        if create_vocab:
-            self.create_vocab(self.file_tok)
-            self.save_vocab(self.dataset_path/'all_tokens.txt')
 
     # Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `_unk_` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
     def create_vocab(self, file_tok: [str]):
@@ -191,42 +154,82 @@ class TextProcessor:
     # Sformatujmy zdekodowany tekst w HTML i zaznaczmy na czerwono sylaby, z których nie dało się skleić słów.
     class X(str):
         def rpl(self, p, c='lightgray'):
-            return TextProcessor.X(self.replace(p, f'<font color="{c}">{p}</font>'))
+            return TextTokenizer.X(self.replace(p, f'<font color="{c}">{p}</font>'))
         def rpl2(self, p, p2):
-            return TextProcessor.X(self.replace(p, p2))
+            return TextTokenizer.X(self.replace(p, p2))
 
     @staticmethod
     def format_html(e_str):
-        return TextProcessor.X(e_str).rpl('/').rpl('--', c='red').rpl('++', c='red').rpl2('\n', '\n<br/>')
+        return TextTokenizer.X(e_str).rpl('/').rpl('--', c='red').rpl('++', c='red').rpl2('\n', '\n<br/>')
+
+class TextProcessor:
+
+    def __init__(self, dataset_path: Path, tokenizer: TextTokenizer):
+        self.dataset_path = dataset_path
+        self.tokenizer = tokenizer
+
+    def do_caps_file(self, fn_corpus_char: Path, fn_corpus_caps: Path):
+        corpus_tmp = fn_corpus_char.open('r').read()
+        corpus_tmp = self.tokenizer.do_caps(corpus_tmp)
+        # trim lines
+        corpus_lines = [x.strip() for x in corpus_tmp.split('\n')]
+        corpus_tmp = '\n'.join(corpus_lines)
+        fn_corpus_caps.open('w').write(corpus_tmp)
+
+    # Ładujemy korpus do pamięci i tokenizujemy.
+    def load_and_tokenize_file(self, fn_corpus_syl: Path, repl_unk=False) -> [str]:
+        a_file = fn_corpus_syl.read_text()
+        return self.tokenizer.tokenize(a_file, repl_unk=repl_unk)
+
+
+# Preprocessing korpusu
+
+def print_head(file_path, n_lines=10):
+    print('\n'.join(file_path.read_text().split('\n')[:n_lines]))
+
+dataset_path =   Path('data')/'pan_tadeusz'
+
+fn_corpus_char = dataset_path/'pan_tadeusz.txt'
+fn_corpus_caps = dataset_path/'pan_tadeusz.caps1.txt'
+fn_corpus_syl = dataset_path/'pan_tadeusz.syl1.txt'
+fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
+
+print(f'Corpus: {fn_corpus_char}')
+print_head(fn_corpus_char)
 
 # Plik wejściowy (korpus) to duży plik tekstowy. 
-processor = TextProcessor(dataset_path)
+tokenizer = TextTokenizer(dataset_path)
+processor = TextProcessor(dataset_path, tokenizer)
 
-# Tokenizacja wielkich liter
+print(f'\nTokenizacja wielkich liter: {fn_corpus_caps.name}')
 processor.do_caps_file(fn_corpus_char, fn_corpus_caps)
 print_head(fn_corpus_caps)
 
-# Podział korpusu na sylaby
+print('\nPodział korpusu na sylaby')
 Stemmer.stem_file(fn_corpus_caps, fn_corpus_syl)
 print_head(fn_corpus_syl)
 
 # Załadowanie do pamięci i tokenizacja
-# TODO: decouple tokenization, also save all tokens
-processor.load_and_tokenize_file(fn_corpus_syl)
+file_tok = processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
 
-tekst = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
-tekst_tok = processor.str2syl2tok(tekst); print(tekst_tok)
+# create & save vocab
+tokenizer.create_vocab(file_tok)
+tokenizer.save_vocab(dataset_path/'all_tokens.txt')
 
-print(processor.syl2str(tekst_tok))
-print(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim=''))[:300])
-print(processor.fix_punctuation(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim='')))[:300])
+text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
+print(f'\nTesting tokenizer: {text}')
+text_tok = tokenizer.str2syl2tok(text); print(text_tok)
 
-e_str = processor.fix_punctuation(processor.do_uncaps_tokens(processor.syl2str(tekst_tok, delim='')))[:400]
-e_html = processor.format_html(e_str); print(e_html)
+print(tokenizer.syl2str(text_tok))
+text_uncapsed = tokenizer.do_uncaps_tokens(tokenizer.syl2str(text_tok, delim=''))[:300]
+print(text_uncapsed)
+e_str = tokenizer.fix_punctuation(text_uncapsed)[:400]
+print(e_str)
+print(tokenizer.format_html(e_str))
 
 # Sample chunk_len token-sized chunks to a file
-chunk_len = 100 #400
 
+# chunk_len = 100 #400
 # def random_chunk():
 #     start_index = random.randint(0, file_tok_len - chunk_len -1)
 #     end_index = start_index + chunk_len + 1
@@ -263,16 +266,15 @@ class LineChunker:
         end_index = start_index + num_lines
         return flatten(self.file_lines_tok[start_index:end_index])
 
-
-# Let's make dataset with more than minimum n_samples
-line_chunker = LineChunker(file_tok=processor.file_tok, chunk_len=chunk_len)
-
-n_samples = processor.file_tok_len // chunk_len
-# print(n_samples, processor.file_tok_len)
-n_samples = max(50000, n_samples); n_samples
+min_n_samples=50000
+print("\nLet's make dataset with more than minimum {min_n_samples} samples")
+chunk_len = 100 #400
+line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
+n_samples = len(file_tok) // chunk_len
+n_samples = max(min_n_samples, n_samples)
+print(f'chunk_len: {chunk_len}')
+print(f'n_samples: {n_samples}')
 
 sampled_chunks = [" ".join(line_chunker.random_chunk()) for _ in range(n_samples)]
-print(sampled_chunks[0])
-
 fn_corpus_sampled.write_text("\n".join(sampled_chunks))
 print(fn_corpus_sampled)
