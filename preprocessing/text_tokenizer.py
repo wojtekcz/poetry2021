@@ -1,6 +1,7 @@
 from pathlib import Path
 import string
 import re
+import json
 from .stemmer import Stemmer
 
 
@@ -40,26 +41,24 @@ class TextTokenizer:
     def create_vocab(self, file_tok: [str]):
         """
         outputs:
-            all_tokens, tok2idx_dict
+            self.vocab dictionary {tok:idx}
         """
         spec_tokens = ['<unk>', '<pad>', '<mask>', '<s>', '</s>', '_eol_', '_cap_', '_up_']
         all_tokens = []; all_tokens.extend(spec_tokens)
         all_tokens.extend(sorted(list(set([x for x in file_tok if not x in spec_tokens]))))
-        self.all_tokens = all_tokens
-        self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(all_tokens)}
+        self.vocab = {tok: idx for (idx, tok) in enumerate(all_tokens)}
 
     def save_vocab(self, vocab_path: Path):
-        vocab_path.write_text(' '.join(self.all_tokens))
+        vocab_path.write_text(json.dumps(self.vocab, indent=4), encoding='utf-8')
 
     def load_vocab(self, vocab_path: Path):
-        self.all_tokens = vocab_path.read_text().split(' ')
-        self.tok2idx_dict = {tok: idx for (idx, tok) in enumerate(self.all_tokens)}
+        self.vocab = json.loads(vocab_path.read_text())
 
     def str2tok(self, a_str: str) -> str:
-        return a_str if self.tok2idx_dict.get(a_str, 0) else '<unk>'
+        return a_str if self.vocab.get(a_str, 0) else '<unk>'
 
     def tok2idx(self, tok: str) -> int:
-        return self.tok2idx_dict.get(tok, 0)
+        return self.vocab.get(tok, 0)
 
     # Przyda nam się funkcja do zakodowania dowolnego tekstu na listę zsylabizowanych tokenów:
     def str2syl2tok(self, text: str) -> [str]:  
