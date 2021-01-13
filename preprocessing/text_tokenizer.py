@@ -31,13 +31,36 @@ class TextTokenizer:
                     else [s.lower()])
         return ''.join(res)
 
+    @staticmethod
+    def decode_caps(e_str: str) -> str:
+        # decode _eol_, _cap_ and _up_
+        # leave <unk> token alone
+        # kill <s> and </s>
+        e_syl = e_str.split(' ')
+        e_syl2 = []
+
+        cap = False; up = False
+
+        for syl in e_syl:
+            if syl == '_eol_': syl = '\n'
+
+            if syl not in ['_cap_', '_up_', '<s>', '</s>']:
+                if cap == True: syl = syl.title(); cap = False
+                if up == True: syl = syl.upper(); up = False        
+                e_syl2.append(syl)
+
+            if syl == '_cap_': cap = True
+            if syl == '_up_': up = True
+
+        return ' '.join(e_syl2)
+
     def tokenize(self, a_str: str, repl_unk=True) -> [str]: 
         strings = self.re_tok.sub(r' \1 ', a_str).replace('\n', ' _eol_ ').split()
         if repl_unk:
             strings = [self.str2tok(s) for s in strings]
         return strings
 
-    # Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `_unk_` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
+    # Tworzymy też listę wszystkich tokenów `all_tokens`. Mamy już specjalne tokeny `_cap_` i `_up_`, zamieniamy znaki końca lini na token `_eol_` i dodajemy token `<unk>` na wypadek, gdybyśmy użyli sylaby (tokena), który nie wystąpił wcześniej w korpusie.
     def create_vocab(self, file_tok: [str]):
         """
         outputs:
@@ -89,29 +112,6 @@ class TextTokenizer:
             s = s.replace(repl[0], repl[1])
 
         return s
-
-    @staticmethod
-    def do_uncaps_tokens(e_str: str) -> str:
-        # decode _eol_, _cap_ and _up_
-        # leave <unk> token alone
-        # kill <s> and </s>
-        e_syl = e_str.split(' ')
-        e_syl2 = []
-
-        cap = False; up = False
-
-        for syl in e_syl:
-            if syl == '_eol_': syl = '\n'
-
-            if syl not in ['_cap_', '_up_', '<s>', '</s>']:
-                if cap == True: syl = syl.title(); cap = False
-                if up == True: syl = syl.upper(); up = False        
-                e_syl2.append(syl)
-
-            if syl == '_cap_': cap = True
-            if syl == '_up_': up = True
-
-        return ' '.join(e_syl2)
 
     @staticmethod
     def fix_punctuation(s: str) -> str: 

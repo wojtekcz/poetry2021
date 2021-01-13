@@ -10,6 +10,7 @@ dependencies:
   - jupyterlab>=3.0
   - pip
   - sentencepiece
+  - numpy
   - transformers==4.0.1
   - nlp
   - psutil

@@ -38,16 +38,16 @@ file_tok = processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
 
 # create & save vocab
 tokenizer.create_vocab(file_tok)
-tokenizer.save_vocab(dataset_path/'all_tokens.txt')
+tokenizer.save_vocab(dataset_path/'all_tokens.json')
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
 print(f'\nTesting tokenizer: {text}')
 text_tok = tokenizer.str2syl2tok(text); print(text_tok)
 
 print(tokenizer.syl2str(text_tok))
-text_uncapsed = tokenizer.do_uncaps_tokens(tokenizer.syl2str(text_tok, delim=''))[:300]
-print(text_uncapsed)
-e_str = tokenizer.fix_punctuation(text_uncapsed)[:400]
+text_decoded = tokenizer.decode_caps(tokenizer.syl2str(text_tok, delim=''))[:300]
+print(text_decoded)
+e_str = tokenizer.fix_punctuation(text_decoded)[:400]
 print(e_str)
 print(tokenizer.format_html(e_str))
 
