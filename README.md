@@ -1,7 +1,22 @@
-conda list --explicit
-conda env export --from-history > environment.yml
-conda env update --file environment.yml 
-docker-compose run --service-ports conda
-pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
-conda install transformers==4.0.1 -c huggingface
-pip install tokenizers==0.10.0rc1
+docker-compose build
+
+# with jupyter lab
+docker-compose up
+
+# bash in running container
+docker-compose exec conda bash
+
+# bash in new container
+docker-compose run conda bash
+
+# download stuff
+setup.sh
+
+# run preprocessing
+python preprocess_dataset.py
+
+# run training
+python roberta_train_script.py
+
+# run eval
+python evaluate.py

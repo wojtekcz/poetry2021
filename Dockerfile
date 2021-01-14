@@ -5,6 +5,6 @@ COPY environment.yml .
 RUN conda env update --name base --file environment.yml 
 RUN pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
 
-WORKDIR /
+WORKDIR /workspace
 EXPOSE 8888
 CMD [ "jupyter", "lab", "--allow-root", "--ip=0.0.0.0", "--no-browser" ]

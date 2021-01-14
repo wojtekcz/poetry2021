@@ -108,7 +108,7 @@ trainer = Trainer(
     train_dataset=dataset,
 )
 
-# trainer.train()
+trainer.train()
 
 ## 🎉 Save final model (+ tokenizer + config) to disk
 trainer.save_model(str(model_path))
