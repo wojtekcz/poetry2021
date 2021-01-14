@@ -10,6 +10,9 @@ docker-compose exec conda bash
 ## bash in new container
 docker-compose run conda bash
 
+## cleanups
+docker-compose down
+
 # operations
 ## download dataset
 ./setup.sh
