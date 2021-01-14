@@ -14,6 +14,8 @@ from transformers import Trainer, TrainingArguments
 
 dataset_path = Path('data')/'pan_tadeusz'
 fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
+run_path = Path('runs')/'run_1'
+model_path = run_path/'model'
 
 # Check that PyTorch sees it
 USE_GPU = torch.cuda.is_available()
@@ -36,12 +38,10 @@ tokenizer_path = dataset_path / 'tokenizer1'
 tokenizer_path.mkdir(parents=True, exist_ok=True)
 tokenizer.save(str(tokenizer_path/"tokenizer.json"))
 
-# Load roberta compatible tokenizer
+# Re-create as roberta compatible tokenizer
 tokenizer_path = dataset_path / 'tokenizer1'
 print(tokenizer_path)
 
-# Now let's re-create our tokenizer in transformers
-# Load it using transformers
 tokenizer2 = PreTrainedTokenizerFast(tokenizer_file=str(tokenizer_path/"tokenizer.json"))
 tokenizer2._tokenizer.post_processor = BertProcessing(
     ("</s>", tokenizer2._tokenizer.token_to_id("</s>")),
@@ -51,7 +51,7 @@ tokenizer2._tokenizer.enable_truncation(max_length=128) # 512
 tokenizer2.mask_token = "<mask>"
 tokenizer2.pad_token = "<pad>"
 
-# 3. Train a language model from scratch
+# 3. Train a language model
 config = RobertaConfig(
     vocab_size=tokenizer2._tokenizer.get_vocab_size(),
     hidden_size=240,
@@ -68,7 +68,6 @@ config = RobertaConfig(
 )
 print(config)
 
-# Finally let's initialize our model.
 model = RobertaForMaskedLM(config=config)
 # !tar xzvf "PanTadeuszRoBERTa.tgz"
 # model = RobertaForMaskedLM.from_pretrained("PanTadeuszRoBERTa")
@@ -82,14 +81,12 @@ dataset = LineByLineTextDataset(
     block_size=128, #512
 )
 
-# We need to define a data_collator.
 data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer2, mlm=True, mlm_probability=0.15
 )
 
-# Finally, we are all set to initialize our Trainer
 training_args = TrainingArguments(
-    output_dir="PanTadeuszRoBERTa",
+    output_dir=str(run_path),
     overwrite_output_dir=True,
     num_train_epochs=300,
     per_device_train_batch_size=768, #64
@@ -111,16 +108,14 @@ trainer = Trainer(
     train_dataset=dataset,
 )
 
-# Start training
-trainer.train()
+# trainer.train()
 
 ## 🎉 Save final model (+ tokenizer + config) to disk
-
-trainer.save_model("PanTadeuszRoBERTa")
+trainer.save_model(str(model_path))
 
 # killing checkpoints before tgz-ting model
-# check_path = (Path("PanTadeuszRoBERTa")/'checkpoint-2000')#/'.ipynb_checkpoints'
+# check_path = (model_path/'checkpoint-2000')
 # [x.unlink() for x in check_path.iterdir()]
 # check_path.rmdir()
 
-os.system('tar czvf PanTadeuszRoBERTa.tgz PanTadeuszRoBERTa/')
+os.system(f'tar czvf {model_path}.tgz {model_path}/')
