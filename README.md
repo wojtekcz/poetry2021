@@ -1,22 +1,24 @@
+# docker-compose commands
 docker-compose build
 
-# with jupyter lab
+## with jupyter lab
 docker-compose up
 
-# bash in running container
+## bash in running container
 docker-compose exec conda bash
 
-# bash in new container
+## bash in new container
 docker-compose run conda bash
 
-# download stuff
-setup.sh
+# operations
+## download dataset
+./setup.sh
 
-# run preprocessing
+## run preprocessing
 python preprocess_dataset.py
 
-# run training
+## run training
 python roberta_train_script.py
 
-# run eval
+## run eval
 python evaluate.py
