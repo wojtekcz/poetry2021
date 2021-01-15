@@ -52,7 +52,7 @@ print(e_str)
 print(tokenizer.format_html(e_str))
 
 min_n_samples=50000
-print("\nLet's make dataset with more than minimum {min_n_samples} samples")
+print(f"\nLet's make dataset with more than minimum {min_n_samples} samples")
 chunk_len = 100 #400
 line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
 n_samples = len(file_tok) // chunk_len
