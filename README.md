@@ -18,10 +18,10 @@ docker-compose down
 ./setup.sh
 
 ## run preprocessing
-python preprocess_dataset.py
+python3 preprocess_dataset.py
 
 ## run training
-python roberta_train_script.py
+python3 roberta_train_script.py
 
 ## run eval
-python evaluate.py
+python3 evaluate.py
