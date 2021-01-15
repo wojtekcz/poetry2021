@@ -85,17 +85,19 @@ data_collator = DataCollatorForLanguageModeling(
     tokenizer=tokenizer2, mlm=True, mlm_probability=0.15
 )
 
+# TODO: pack setup parameters per gpu
+
 training_args = TrainingArguments(
     output_dir=str(run_path),
     overwrite_output_dir=True,
-    num_train_epochs=300,
-    per_device_train_batch_size=768, #64
+    num_train_epochs=100,
+    per_device_train_batch_size=512, #64
     logging_steps=100,
     save_steps=2000,
     save_total_limit=1,
     # prediction_loss_only=True,
     learning_rate=1e-3, #5e-05,
-    # fp16=True,
+    fp16=True,
 #     fp16_opt_level="O1",
 #     fp16_backend="amp"
 )
