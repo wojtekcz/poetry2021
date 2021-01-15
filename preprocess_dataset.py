@@ -63,3 +63,5 @@ print(f'n_samples: {n_samples}')
 sampled_chunks = [" ".join(line_chunker.random_chunk()) for _ in range(n_samples)]
 fn_corpus_sampled.write_text("\n".join(sampled_chunks))
 print(fn_corpus_sampled)
+
+print('ala ma kota')
