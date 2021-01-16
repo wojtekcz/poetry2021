@@ -3,7 +3,10 @@
 
 # Załadowanie bibliotek
 from pathlib import Path
-from preprocessing import *
+from preprocessing.stemmer import Stemmer
+from preprocessing.line_chunker import LineChunker
+from preprocessing.text_processor import TextProcessor
+from preprocessing.text_tokenizer import TextTokenizer
 
 
 # Preprocessing korpusu
@@ -11,7 +14,8 @@ from preprocessing import *
 def print_head(file_path, n_lines=10):
     print('\n'.join(file_path.read_text().split('\n')[:n_lines]))
 
-dataset_path =   Path('data')/'pan_tadeusz'
+
+dataset_path = Path('data')/'pan_tadeusz'
 
 fn_corpus_char = dataset_path/'pan_tadeusz.txt'
 fn_corpus_caps = dataset_path/'pan_tadeusz.caps1.txt'
@@ -51,9 +55,9 @@ e_str = tokenizer.fix_punctuation(text_decoded)[:400]
 print(e_str)
 print(tokenizer.format_html(e_str))
 
-min_n_samples=50000
+min_n_samples = 50000
 print(f"\nLet's make dataset with more than minimum {min_n_samples} samples")
-chunk_len = 100 #400
+chunk_len = 100  # 400
 line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
 n_samples = len(file_tok) // chunk_len
 n_samples = max(min_n_samples, n_samples)

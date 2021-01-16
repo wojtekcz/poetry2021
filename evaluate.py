@@ -1,6 +1,6 @@
 from pathlib import Path
 import torch
-from preprocessing import *
+from preprocessing.text_tokenizer import TextTokenizer
 from tokenizers.processors import BertProcessing
 from transformers import PreTrainedTokenizerFast, RobertaConfig, RobertaForMaskedLM
 
@@ -22,7 +22,7 @@ tokenizer2._tokenizer.post_processor = BertProcessing(
     ("</s>", tokenizer2._tokenizer.token_to_id("</s>")),
     ("<s>", tokenizer2._tokenizer.token_to_id("<s>")),
 )
-tokenizer2._tokenizer.enable_truncation(max_length=128) # 512
+tokenizer2._tokenizer.enable_truncation(max_length=128)  # 512
 tokenizer2.mask_token = "<mask>"
 tokenizer2.pad_token = "<pad>"
 
@@ -31,6 +31,7 @@ tokenizer2.pad_token = "<pad>"
 
 def to_gpu(x, *args, **kwargs):
     return x.cuda(*args, **kwargs) if USE_GPU else x
+
 
 # ## load trained model
 
@@ -43,6 +44,7 @@ model.device
 # ## generate
 model.eval()
 
+
 # Wskaźnik liczby sylab, z których nie dało się skleić słów:
 def bad_words(e_str): e_syl = e_str.split(' '); return (e_str.count('++') + e_str.count('--')) / len(e_syl)
 # def bad_words(e_syl): e_str = syl2str(e_syl); return (e_str.count('++') + e_str.count('--')) / len(e_syl)
@@ -54,6 +56,7 @@ def print_eval(generated):
     decoded = text_tokenizer.decode_caps(text_tokenizer.syl2str(e_syl, delim=''))
     print(text_tokenizer.fix_punctuation(decoded))
     # display(HTML(text_tokenizer.format_html(text_tokenizer.fix_punctuation(decoded))))
+
 
 def evaluate(prime_str, max_length=100, temperature=0.8):
     prime_tok = text_tokenizer.str2syl2tok(prime_str)

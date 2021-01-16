@@ -1,7 +1,7 @@
 from pathlib import Path
 import torch
 import os
-from preprocessing import *
+from preprocessing.text_tokenizer import TextTokenizer
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import CharDelimiterSplit
@@ -77,8 +77,8 @@ print(f'model.num_parameters(): {model.num_parameters()}')
 print(fn_corpus_sampled)
 dataset = LineByLineTextDataset(
     tokenizer=tokenizer2,
-    file_path=fn_corpus_sampled, #pan_tadeusz.txt
-    block_size=128, #512
+    file_path=fn_corpus_sampled,
+    block_size=128,  # 512
 )
 
 data_collator = DataCollatorForLanguageModeling(
@@ -91,15 +91,15 @@ training_args = TrainingArguments(
     output_dir=str(run_path),
     overwrite_output_dir=True,
     num_train_epochs=100,
-    per_device_train_batch_size=512, #64
+    per_device_train_batch_size=512,  # 64
     logging_steps=100,
     save_steps=2000,
     save_total_limit=1,
     # prediction_loss_only=True,
-    learning_rate=1e-3, #5e-05,
+    learning_rate=1e-3,  # 5e-05,
     fp16=True,
-#     fp16_opt_level="O1",
-#     fp16_backend="amp"
+    # fp16_opt_level="O1",
+    # fp16_backend="amp"
 )
 print(training_args)
 
@@ -112,7 +112,7 @@ trainer = Trainer(
 
 trainer.train()
 
-## 🎉 Save final model (+ tokenizer + config) to disk
+# 🎉 Save final model (+ tokenizer + config) to disk
 trainer.save_model(str(model_path))
 
 # killing checkpoints before tgz-ting model
