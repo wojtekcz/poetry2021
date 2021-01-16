@@ -51,5 +51,8 @@ in notebook:
 ```
 ### setup runtime env, download sources & dataset
 ```
+cd /content
+git clone https://github.com/wojtekcz/poetry2021.git
+cd poetry2021
 ./setup_colab.sh
 ```
