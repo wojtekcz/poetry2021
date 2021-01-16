@@ -1,7 +1,7 @@
-# creating outgoing ssh tunnel from colab vm to external server 
-# exposing colab's ssh port 22 on it as port 8888
+# create outgoing ssh tunnel from Colab VM to external server 
+# expose Colab's ssh-server port 22 on it as port SSH_RELAY_PORT
 # inputs:
-# - SSH_HOST env var
+# - SSH_RELAY_HOST, SSH_RELAY_PORT env vars
 # - /content/authorized_keys
 # - /content/private_key.pem
 
@@ -25,4 +25,4 @@ wget -nv $baseURL/sshd_config -O /etc/ssh/sshd_config
 /etc/init.d/ssh status
 
 options="-oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null"
-ssh $options -i $privateKeyPath -f -R 8888:localhost:22 $SSH_HOST -N -v &
+ssh $options -i $privateKeyPath -f -R $SSH_RELAY_PORT:localhost:22 $SSH_RELAY_HOST -N -v &

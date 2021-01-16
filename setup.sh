@@ -7,8 +7,9 @@ wget --no-clobber -P $dataset_path https://github.com/wojtekcz/poetry2021/releas
 # colab setup
 
 ## ssh tunnel
-# upload private_key.pem and authorized_keys to /content
-# !SSH_HOST=<user>@<host> <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/swift_colab_ssh_server_bekaes.sh)
+# in notebook:
+# - upload private_key.pem and authorized_keys to /content
+# - run: !SSH_RELAY_HOST=<user>@<host> SSH_RELAY_PORT=<port> <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/swift_colab_ssh_server.sh)
 
 ## setup stemmer
 cd /usr/local
@@ -28,3 +29,7 @@ git clone https://github.com/wojtekcz/poetry2021.git
 dataset_path=/content/poetry2021/data/pan_tadeusz
 mkdir -p $dataset_path
 wget --no-clobber -P $dataset_path https://github.com/wojtekcz/poetry2021/releases/download/v0.1/pan_tadeusz.txt
+
+# setup git
+git config --global user.name "Wojtek Czarnowski"
+git config --global user.email "wojtek.czarnowski@gmail.com"
