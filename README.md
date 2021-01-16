@@ -44,7 +44,7 @@ in notebook:
 - upload `private_key.pem` and `authorized_keys` to `/content`
 - run:
 ```
-!SSH_RELAY_HOST=<user>@<host> SSH_RELAY_PORT=<port> bash <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/swift_colab_ssh_server.sh)
+!SSH_RELAY_HOST=<user>@<host> SSH_RELAY_PORT=<port> bash <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/colab_ssh_server.sh)
 ```
 ### setup runtime env, download sources & dataset
 ```
