@@ -47,7 +47,7 @@ tokenizer2._tokenizer.post_processor = BertProcessing(
     ("</s>", tokenizer2._tokenizer.token_to_id("</s>")),
     ("<s>", tokenizer2._tokenizer.token_to_id("<s>")),
 )
-tokenizer2._tokenizer.enable_truncation(max_length=128) # 512
+tokenizer2._tokenizer.enable_truncation(max_length=128)  # 512
 tokenizer2.mask_token = "<mask>"
 tokenizer2.pad_token = "<pad>"
 

@@ -27,13 +27,13 @@ tokenizer2.mask_token = "<mask>"
 tokenizer2.pad_token = "<pad>"
 
 
-# ## 4. Check that the LM actually trained
+# 4. Check that the LM actually trained
 
 def to_gpu(x, *args, **kwargs):
     return x.cuda(*args, **kwargs) if USE_GPU else x
 
 
-# ## load trained model
+# load trained model
 
 # os.system('tar xzvf PanTadeuszRoBERTa.tgz')
 
