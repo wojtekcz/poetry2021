@@ -14,7 +14,7 @@ from transformers import Trainer, TrainingArguments
 
 dataset_path = Path('data')/'pan_tadeusz'
 fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
-run_path = Path('runs')/'run_2'
+run_path = Path('runs')/'run_3'
 model_path = run_path/'model'
 
 # Check that PyTorch sees it
@@ -78,7 +78,7 @@ training_args = TrainingArguments(
     save_steps=100,
     save_total_limit=1,
     # prediction_loss_only=True,
-    learning_rate=5e-4,  # 5e-05,
+    learning_rate=2e-4,  # 5e-05,
     fp16=True,
     # fp16_opt_level="O1",
     # fp16_backend="amp"
