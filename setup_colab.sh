@@ -7,8 +7,11 @@ tar xzf stemmer-2.0.3.tgz
 rm stemmer-2.0.3.tgz
 
 ## setup python libs
-pip3 install sentencepiece nlp transformers==4.0.1
-pip3 install tokenizers==0.10.0rc1
+# pip3 install sentencepiece nlp transformers==4.0.1
+# pip3 install tokenizers==0.10.0rc1
+
+pip3 install sentencepiece nlp transformers==4.2.1
+pip3 install tokenizers==0.9.4
 
 ## project sources setup
 cd /content
