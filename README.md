@@ -14,6 +14,9 @@ docker-compose run conda bash
 # start bash in running container
 docker-compose exec conda bash
 
+# start jupyter lab
+jupyter lab --allow-root --ip=0.0.0.0 --no-browser
+
 # cleanups
 docker-compose stop
 docker-compose down
