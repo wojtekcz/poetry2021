@@ -27,7 +27,7 @@ print(f'USE_GPU={USE_GPU}')
 # 2. Create a tokenizer
 # load our tokenizer
 text_tokenizer = TextTokenizer(dataset_path)
-text_tokenizer.load_vocab(dataset_path/'all_tokens.json')
+text_tokenizer.load_vocab(dataset_path/'vocab.json')
 
 # Create transformers compatible tokenizer
 tokenizer = Tokenizer(WordLevel(text_tokenizer.vocab))

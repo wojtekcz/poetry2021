@@ -42,7 +42,7 @@ file_tok = processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
 
 # create & save vocab
 tokenizer.create_vocab(file_tok)
-tokenizer.save_vocab(dataset_path/'all_tokens.json')
+tokenizer.save_vocab(dataset_path/'vocab.json')
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
 print(f'\nTesting tokenizer: {text}')
