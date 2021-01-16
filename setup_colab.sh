@@ -1,15 +1,4 @@
-# docker setup
-## download dataset
-dataset_path=/workspace/data/pan_tadeusz
-mkdir -p $dataset_path
-wget --no-clobber -P $dataset_path https://github.com/wojtekcz/poetry2021/releases/download/v0.1/pan_tadeusz.txt
-
 # colab setup
-
-## ssh tunnel
-# in notebook:
-# - upload private_key.pem and authorized_keys to /content
-# - run: !SSH_RELAY_HOST=<user>@<host> SSH_RELAY_PORT=<port> <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/swift_colab_ssh_server.sh)
 
 ## setup stemmer
 cd /usr/local
