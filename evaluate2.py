@@ -8,7 +8,7 @@ USE_GPU = torch.cuda.is_available()
 # USE_GPU = False
 print(f'USE_GPU={USE_GPU}')
 
-run_path = Path('runs')/'run_2'
+run_path = Path('runs')/'run_4'
 model_path = run_path/'model'
 
 dataset_path = Path('data')/'pan_tadeusz'

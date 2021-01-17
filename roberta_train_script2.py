@@ -11,7 +11,7 @@ from transformers import Trainer, TrainingArguments
 
 dataset_path = Path('data')/'pan_tadeusz'
 fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
-run_path = Path('runs')/'run_2'
+run_path = Path('runs')/'run_4'
 model_path = run_path/'model'
 
 # Check that PyTorch sees it
@@ -72,8 +72,8 @@ training_args = TrainingArguments(
     output_dir=str(run_path),
     logging_dir=str(run_path),
     overwrite_output_dir=True,
-    num_train_epochs=2,
-    per_device_train_batch_size=512,  # 64
+    num_train_epochs=1000,
+    per_device_train_batch_size=460,  # 64
     logging_steps=10,
     save_steps=100,
     save_total_limit=1,
