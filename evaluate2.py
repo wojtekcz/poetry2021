@@ -8,7 +8,7 @@ USE_GPU = torch.cuda.is_available()
 # USE_GPU = False
 print(f'USE_GPU={USE_GPU}')
 
-run_path = Path('runs')/'run_1'
+run_path = Path('runs')/'run_2'
 model_path = run_path/'model'
 
 dataset_path = Path('data')/'pan_tadeusz'
@@ -67,7 +67,7 @@ def evaluate(prime_str, max_length=100, temperature=0.8):
     return tokenizer2.decode(preds[0])
 
 
-max_length = 500
+max_length = 100
 gen1 = evaluate('chwycił na taśmie przypięty', max_length=max_length, temperature=1.0)
 print_eval(gen1)
 gen1
