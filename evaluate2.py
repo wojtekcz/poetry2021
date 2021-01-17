@@ -1,23 +1,24 @@
 from pathlib import Path
 import torch
 from preprocessing.text_tokenizer import TextTokenizer
-from tokenizers.processors import BertProcessing
-from transformers import PreTrainedTokenizerFast, RobertaConfig, RobertaForMaskedLM, RobertaTokenizerFast
+from transformers import PreTrainedTokenizerFast, RobertaForMaskedLM
 
 # Check that PyTorch sees it
 USE_GPU = torch.cuda.is_available()
 # USE_GPU = False
 print(f'USE_GPU={USE_GPU}')
 
-run_path = Path('runs')/'run_3'
+run_path = Path('runs')/'run_1'
 model_path = run_path/'model'
 
 dataset_path = Path('data')/'pan_tadeusz'
 text_tokenizer = TextTokenizer(dataset_path)
 text_tokenizer.load_vocab(dataset_path/'vocab.json')
 
-tokenizer_path = dataset_path / 'tokenizer1'
-tokenizer2 = RobertaTokenizerFast.from_pretrained(dataset_path/"my-roberta2", max_len=128)
+tokenizer2 = PreTrainedTokenizerFast.from_pretrained(
+    dataset_path/'my-pretrained-tokenizer-fast2',
+    max_len=128
+)
 
 
 # 4. Check that the LM actually trained

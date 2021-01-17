@@ -2,19 +2,16 @@ from pathlib import Path
 import torch
 import os
 from preprocessing.text_tokenizer import TextTokenizer
-from tokenizers import Tokenizer
-from tokenizers.models import WordLevel
-from tokenizers.pre_tokenizers import CharDelimiterSplit
-from tokenizers.processors import BertProcessing
 # https://github.com/huggingface/transformers/issues/7234#issuecomment-720092292
-from transformers import RobertaTokenizerFast, RobertaConfig, RobertaForMaskedLM
+from transformers import PreTrainedTokenizerFast
+from transformers import RobertaConfig, RobertaForMaskedLM
 from transformers import LineByLineTextDataset, DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 
 
 dataset_path = Path('data')/'pan_tadeusz'
 fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
-run_path = Path('runs')/'run_3'
+run_path = Path('runs')/'run_1'
 model_path = run_path/'model'
 
 # Check that PyTorch sees it
@@ -30,7 +27,10 @@ text_tokenizer = TextTokenizer(dataset_path)
 text_tokenizer.load_vocab(dataset_path/'vocab.json')
 
 # Create transformers compatible tokenizer
-tokenizer2 = RobertaTokenizerFast.from_pretrained(dataset_path/"my-roberta2", max_len=128)
+tokenizer2 = PreTrainedTokenizerFast.from_pretrained(
+    dataset_path/'my-pretrained-tokenizer-fast2',
+    max_len=128
+)
 
 # 3. Train a language model
 config = RobertaConfig(
@@ -94,7 +94,7 @@ trainer = Trainer(
 
 trainer.train()
 
-# 🎉 Save final model (+ tokenizer + config) to disk
+# Save final model to disk
 trainer.save_model(str(model_path))
 
 # killing checkpoints before tgz-ting model
