@@ -55,11 +55,12 @@ e_str = tokenizer.fix_punctuation(text_decoded)[:400]
 print(e_str)
 print(tokenizer.format_html(e_str))
 
-min_n_samples = 50000
+min_n_samples = 1000  # 50000
 print(f"\nLet's make dataset with more than minimum {min_n_samples} samples")
 chunk_len = 100  # 400
 line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
 n_samples = len(file_tok) // chunk_len
+print(f'n_samples: {n_samples}')
 n_samples = max(min_n_samples, n_samples)
 print(f'chunk_len: {chunk_len}')
 print(f'n_samples: {n_samples}')
