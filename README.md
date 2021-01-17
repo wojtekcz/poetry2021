@@ -27,11 +27,14 @@ docker-compose down
 # download dataset
 ./setup_docker.sh
 
-# run preprocessing
+# preprocessing
 python3 preprocess_dataset.py
 
-# run training
+# training
 python3 roberta_train_script.py
+
+# tensorboard
+tensorboard --bind_all --logdir runs/
 
 # run eval
 python3 evaluate.py
