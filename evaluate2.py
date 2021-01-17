@@ -59,21 +59,26 @@ def evaluate(prime_str, max_length=100, temperature=0.8):
     preds = model.generate(ids.to(model.device), max_length=max_length, 
                            temperature=temperature, 
                            num_beams=10, early_stopping=True,
-                           no_repeat_ngram_size=2,
+                           no_repeat_ngram_size=1,
                            do_sample=True,
                            top_k=50,
                            top_p=0.92
                            )
+    print(f'preds[0]: {preds[0]}')
     return tokenizer2.decode(preds[0])
 
 
 max_length = 100
-gen1 = evaluate('chwycił na taśmie przypięty', max_length=max_length, temperature=1.0)
-print_eval(gen1)
-gen1
+# gen1 = evaluate('chwycił na taśmie przypięty', max_length=max_length, temperature=1.0)
+# print_eval(gen1)
+# gen1
 
-print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=1.0))
-print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=0.8))
-print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=1.5))
-print_eval(evaluate('Tadeusz', max_length=max_length, temperature=0.8))
-print_eval(evaluate('Moskale', max_length=max_length, temperature=0.8))
+# print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=1.0))
+# print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=0.8))
+# print_eval(evaluate('Litwo! Ojczyzno', max_length=max_length, temperature=1.5))
+# print_eval(evaluate('Tadeusz', max_length=max_length, temperature=0.8))
+# print_eval(evaluate('Moskale', max_length=max_length, temperature=0.8))
+
+# print_eval(evaluate('Ruszyli szczwacze zwolna,', max_length=max_length, temperature=1.0))
+
+print_eval(evaluate('Ruszyli szczwacze zwolna, jeden tuż za drugim, _eol_ Ale za bramą rzędem rozbiegli się długim; _eol_ ', max_length=max_length, temperature=1.0))
