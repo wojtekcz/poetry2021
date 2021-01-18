@@ -5,3 +5,4 @@ __pycache__
 /runs
 /colab_ssh/private_key.pem
 /colab_ssh/authorized_keys
+/notebooks/data
