@@ -24,11 +24,11 @@ print(f'USE_GPU={USE_GPU}')
 # 2. Create a tokenizer
 # load our tokenizer
 text_tokenizer = TextTokenizer(dataset_path)
-text_tokenizer.load_vocab(dataset_path/'vocab.json')
+text_tokenizer.load_vocab(dataset_path / 'vocab.json')
 
 # Create transformers compatible tokenizer
 tokenizer2 = PreTrainedTokenizerFast.from_pretrained(
-    dataset_path/'my-pretrained-tokenizer-fast2',
+    dataset_path / 'my-pretrained-tokenizer-fast2',
     max_len=128
 )
 

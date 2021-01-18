@@ -8,15 +8,15 @@ USE_GPU = torch.cuda.is_available()
 # USE_GPU = False
 print(f'USE_GPU={USE_GPU}')
 
-run_path = Path('runs')/'run_4'
-model_path = run_path/'model'
+run_path = Path('runs') / 'run_4'
+model_path = run_path / 'model'
 
-dataset_path = Path('data')/'pan_tadeusz'
+dataset_path = Path('data') / 'pan_tadeusz'
 text_tokenizer = TextTokenizer(dataset_path)
-text_tokenizer.load_vocab(dataset_path/'vocab.json')
+text_tokenizer.load_vocab(dataset_path / 'vocab.json')
 
 tokenizer2 = PreTrainedTokenizerFast.from_pretrained(
-    dataset_path/'my-pretrained-tokenizer-fast2',
+    dataset_path / 'my-pretrained-tokenizer-fast2',
     max_len=128
 )
 
