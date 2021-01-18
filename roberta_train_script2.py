@@ -15,7 +15,7 @@ from torch.utils.data.dataset import Dataset
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 dataset_path = Path('data') / 'pan_tadeusz'
-fn_corpus = dataset_path / 'pan_tadeusz.sampled1.mini.txt'
+fn_corpus = dataset_path / 'pan_tadeusz.sampled1.txt'
 fn_corpus_eval = dataset_path / 'pan_tadeusz.sampled1.eval.txt'
 run_path = Path('runs') / 'run_5'
 model_path = run_path / 'model'
@@ -50,8 +50,8 @@ config = RobertaConfig(
     bos_token_id=tokenizer2._tokenizer.token_to_id("<s>"),
     eos_token_id=tokenizer2._tokenizer.token_to_id("</s>"),
     pad_token_id=tokenizer2._tokenizer.token_to_id("<pad>"),
-    # attention_probs_dropout_prob=0.0,
-    # hidden_dropout_prob=0.0,
+    attention_probs_dropout_prob=0.0,
+    hidden_dropout_prob=0.0,
 )
 print(config)
 
@@ -101,7 +101,7 @@ training_args = TrainingArguments(
     overwrite_output_dir=True,
     num_train_epochs=1000,
     per_device_train_batch_size=dev_params['per_device_train_batch_size'],
-    logging_steps=10,
+    logging_steps=100,
     save_steps=100,
     save_total_limit=1,
     evaluation_strategy='steps',
@@ -125,7 +125,7 @@ class MyTrainer(Trainer):
         ignore_keys: Optional[List[str]] = None,
         metric_key_prefix: str = "eval",
     ) -> Dict[str, float]:
-        print("evaluate()")
+        print("\nevaluate()")
         eval.print_eval(eval.evaluate(model, 'Ruszyli szczwacze zwolna,', max_length=max_length, greedy=True))
         rslt = super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
         # TODO: save generation & bad_words to logger
