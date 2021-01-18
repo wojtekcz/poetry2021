@@ -1,6 +1,7 @@
 from pathlib import Path
 import torch
 import os
+import warnings
 from preprocessing.text_tokenizer import TextTokenizer
 # https://github.com/huggingface/transformers/issues/7234#issuecomment-720092292
 from transformers import PreTrainedTokenizerFast
@@ -8,6 +9,7 @@ from transformers import RobertaConfig, RobertaForMaskedLM
 from transformers import LineByLineTextDataset, DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 dataset_path = Path('data')/'pan_tadeusz'
 fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
