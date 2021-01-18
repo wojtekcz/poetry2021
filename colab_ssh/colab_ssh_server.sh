@@ -10,6 +10,7 @@ baseURL=https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/
 # setup utilities
 apt-get update && apt-get install -y autossh tmux mc htop
 pip2 install glances google-auth-oauthlib==0.4.1 grpcio==1.24.3
+pip3 install flake8
 wget -nv $baseURL/bashrc -O /root/.bashrc
 
 # setup ssh
