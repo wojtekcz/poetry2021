@@ -9,15 +9,17 @@ dependencies:
   - nodejs
   - jedi==0.17.2
   - jupyterlab>=3.0
+  - flake8
   - pip
   - sentencepiece
   - numpy
-  - transformers==4.0.1
+  - transformers #==4.0.1
+  - tokenizers
   - nlp
   - psutil
   # - pytorch::pytorch
   # - pytorch::torchvision
   # - pytorch::torchaudio
   # - pytorch::cpuonly
-  - pip:
-    - tokenizers==0.10.0rc1
+  # - pip:
+  #   - tokenizers==0.10.0
