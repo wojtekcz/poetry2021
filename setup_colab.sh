@@ -11,7 +11,7 @@ rm stemmer-2.0.3.tgz
 # pip3 install tokenizers==0.10.0rc1
 
 pip3 install sentencepiece nlp transformers==4.2.1
-pip3 install tokenizers==0.9.4
+pip3 install tokenizers==0.9.4 datasets==1.2.1
 
 ## download dataset
 dataset_path=/content/poetry2021/data/pan_tadeusz

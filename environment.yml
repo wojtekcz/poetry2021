@@ -21,5 +21,6 @@ dependencies:
   # - pytorch::torchvision
   # - pytorch::torchaudio
   # - pytorch::cpuonly
-  # - pip:
+  - pip:
+    - datasets
   #   - tokenizers==0.10.0
