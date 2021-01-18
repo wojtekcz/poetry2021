@@ -1,0 +1,32 @@
+git clone https://github.com/huggingface/transformers.git
+cd transformers/examples/language-modeling/
+pip3 install -r requirements.txt
+export TF_CPP_MIN_LOG_LEVEL=3
+export TRANSFORMERS_VERBOSITY=error
+
+
+python3 run_clm.py \
+    --model_name_or_path gpt2 \
+    --train_file path_to_train_file \
+    --validation_file path_to_validation_file \
+    --do_train \
+    --do_eval \
+    --output_dir /content/tmp/test-clm
+
+-----
+import transformers
+transformers.logging.set_verbosity_error()
+
+
+python3 run_clm.py \
+    --model_name_or_path gpt2 \
+    --dataset_name wikitext \
+    --dataset_config_name wikitext-2-raw-v1 \
+    --do_train \
+    --do_eval \
+    --output_dir /content/tmp/test-clm \
+    --fp16 \
+    --per_device_train_batch_size 3 \
+    --per_device_eval_batch_size 3
+
+python3 run_clm.py --help
