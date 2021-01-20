@@ -105,7 +105,6 @@ training_args = TrainingArguments(
     save_steps=100,
     save_total_limit=1,
     evaluation_strategy='steps',
-    # prediction_loss_only=True,
     learning_rate=dev_params['learning_rate'],
     fp16=dev_params['fp16'],
     # fp16_opt_level="O1",
