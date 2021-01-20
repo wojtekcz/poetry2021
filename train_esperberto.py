@@ -18,7 +18,7 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_1'
+run_path = Path('runs/esperberto') / 'run_2'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
@@ -88,7 +88,7 @@ training_args = TrainingArguments(
     logging_steps=10,
     save_steps=1000,
     save_total_limit=2,
-    learning_rate=1e-3,
+    # learning_rate=1e-3,
     fp16=True,
     evaluation_strategy='epoch',
 )
