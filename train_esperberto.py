@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 # coding: utf-8
-import os
+# import os
 import torch
 from pathlib import Path
 from tokenizers import ByteLevelBPETokenizer
-from tokenizers.processors import BertProcessing
+# from tokenizers.processors import BertProcessing
 from transformers import RobertaConfig
 from transformers import RobertaTokenizerFast
 from transformers import RobertaForMaskedLM
 from transformers import LineByLineTextDataset
 from transformers import DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
-from transformers import pipeline
+# from transformers import pipeline
+from typing import Dict, List, Optional
+from torch.utils.data.dataset import Dataset
 
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_dir = Path('runs/esperberto') / 'run_1'
+run_path = Path('runs/esperberto') / 'run_1'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
@@ -46,7 +48,7 @@ tokenizer.save_model(str(tokenizer_path))
 #     ("</s>", tokenizer.token_to_id("</s>")),
 #     ("<s>", tokenizer.token_to_id("<s>")),
 # )
-# tokenizer.enable_truncation(max_length=512)
+# tokenizer.enable_truncation(max_length=128)
 
 # print(tokenizer.encode("Mi estas Julien."))
 # print(tokenizer.encode("Mi estas Julien.").tokens)
@@ -63,7 +65,7 @@ config = RobertaConfig(
 )
 
 # Now let's re-create our tokenizer in transformers
-tokenizer = RobertaTokenizerFast.from_pretrained(tokenizer_path, max_len=512)
+tokenizer = RobertaTokenizerFast.from_pretrained(tokenizer_path, max_len=128)
 model = RobertaForMaskedLM(config=config)
 print(model.num_parameters())
 
@@ -78,15 +80,39 @@ data_collator = DataCollatorForLanguageModeling(
 )
 
 training_args = TrainingArguments(
-    output_dir=run_dir,
+    output_dir=str(run_path),
+    logging_dir=str(run_path),
     overwrite_output_dir=True,
-    num_train_epochs=1,
-    per_gpu_train_batch_size=64,
-    save_steps=10_000,
+    num_train_epochs=30,
+    per_device_train_batch_size=96,
+    logging_steps=10,
+    save_steps=1000,
     save_total_limit=2,
+    learning_rate=1e-3,
+    fp16=True,
+    evaluation_strategy='epoch',
 )
 
-trainer = Trainer(
+max_length = 100
+
+
+class MyTrainer(Trainer):
+
+    def evaluate(
+        self,
+        eval_dataset: Optional[Dataset] = None,
+        ignore_keys: Optional[List[str]] = None,
+        metric_key_prefix: str = "eval",
+    ) -> Dict[str, float]:
+        print("\nevaluate()")
+        prime_str = 'Eichkorn en tri kajeroj,'
+        ids = tokenizer.encode(prime_str, return_tensors="pt")[:, :-1]
+        preds = model.generate(ids.to(model.device), max_length=max_length)
+        print(tokenizer.decode(preds[0]))
+        return []
+
+
+trainer = MyTrainer(
     model=model,
     args=training_args,
     data_collator=data_collator,
@@ -97,12 +123,12 @@ trainer = Trainer(
 trainer.train()
 
 # #### 🎉 Save final model (+ tokenizer + config) to disk
-trainer.save_model(run_dir / "model")
+trainer.save_model(run_path / "model")
 
 # ## 4. Check that the LM actually trained
 # fill_mask = pipeline(
 #     "fill-mask",
-#     model=str(run_dir / "model"),
+#     model=str(run_path / "model"),
 #     tokenizer=str(tokenizer_path)
 # )
 
@@ -116,8 +142,7 @@ trainer.save_model(run_dir / "model")
 
 # ## 5. Generate
 
-prime_str = 'Ala ma kota'
-max_length = 100
+prime_str = 'Eichkorn en tri kajeroj,'
 
 ids = tokenizer.encode(prime_str, return_tensors="pt")[:, :-1]
 preds = model.generate(ids.to(model.device), max_length=max_length)
