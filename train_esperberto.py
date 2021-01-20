@@ -18,7 +18,7 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_3'
+run_path = Path('runs/esperberto') / 'run_4'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
@@ -64,19 +64,35 @@ print(f'cuda: {torch.cuda.is_available()}')
 #     type_vocab_size=1,
 # )
 
+# config = RobertaConfig(
+#     vocab_size=tokenizer._tokenizer.get_vocab_size(),
+#     hidden_size=240,
+#     intermediate_size=2048,
+#     max_position_embeddings=514,
+#     num_attention_heads=12,
+#     num_hidden_layers=6,
+#     type_vocab_size=1,
+#     bos_token_id=tokenizer._tokenizer.token_to_id("<s>"),
+#     eos_token_id=tokenizer._tokenizer.token_to_id("</s>"),
+#     pad_token_id=tokenizer._tokenizer.token_to_id("<pad>"),
+#     attention_probs_dropout_prob=0.0,
+#     hidden_dropout_prob=0.0,
+# )
+
+# SmallBERTa
 config = RobertaConfig(
     vocab_size=tokenizer._tokenizer.get_vocab_size(),
-    hidden_size=240,
-    intermediate_size=2048,
-    max_position_embeddings=514,
-    num_attention_heads=12,
-    num_hidden_layers=6,
+    hidden_size=128,
+    intermediate_size=256,
+    max_position_embeddings=256,
+    num_attention_heads=1,
+    num_hidden_layers=1,
     type_vocab_size=1,
     bos_token_id=tokenizer._tokenizer.token_to_id("<s>"),
     eos_token_id=tokenizer._tokenizer.token_to_id("</s>"),
     pad_token_id=tokenizer._tokenizer.token_to_id("<pad>"),
-    attention_probs_dropout_prob=0.0,
-    hidden_dropout_prob=0.0,
+    attention_probs_dropout_prob=0.1,
+    hidden_dropout_prob=0.3,
 )
 
 # Now let's re-create our tokenizer in transformers
@@ -103,7 +119,7 @@ training_args = TrainingArguments(
     logging_steps=10,
     save_steps=1000,
     save_total_limit=2,
-    # learning_rate=1e-3,
+    learning_rate=1e-4,
     fp16=True,
     evaluation_strategy='epoch',
 )
