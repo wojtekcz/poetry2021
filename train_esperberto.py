@@ -18,7 +18,7 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_2'
+run_path = Path('runs/esperberto') / 'run_3'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
@@ -56,12 +56,27 @@ tokenizer.save_model(str(tokenizer_path))
 # ## 3. Train a language model from scratch
 print(f'cuda: {torch.cuda.is_available()}')
 
+# config = RobertaConfig(
+#     vocab_size=52_000,
+#     max_position_embeddings=514,
+#     num_attention_heads=12,
+#     num_hidden_layers=6,
+#     type_vocab_size=1,
+# )
+
 config = RobertaConfig(
-    vocab_size=52_000,
+    vocab_size=tokenizer._tokenizer.get_vocab_size(),
+    hidden_size=240,
+    intermediate_size=2048,
     max_position_embeddings=514,
     num_attention_heads=12,
     num_hidden_layers=6,
     type_vocab_size=1,
+    bos_token_id=tokenizer._tokenizer.token_to_id("<s>"),
+    eos_token_id=tokenizer._tokenizer.token_to_id("</s>"),
+    pad_token_id=tokenizer._tokenizer.token_to_id("<pad>"),
+    attention_probs_dropout_prob=0.0,
+    hidden_dropout_prob=0.0,
 )
 
 # Now let's re-create our tokenizer in transformers
@@ -84,7 +99,7 @@ training_args = TrainingArguments(
     logging_dir=str(run_path),
     overwrite_output_dir=True,
     num_train_epochs=30,
-    per_device_train_batch_size=96,
+    per_device_train_batch_size=128,
     logging_steps=10,
     save_steps=1000,
     save_total_limit=2,
