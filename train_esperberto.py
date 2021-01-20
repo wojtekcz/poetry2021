@@ -18,17 +18,18 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_4'
+run_path = Path('runs/esperberto') / 'run_5'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
 
 # ## 2. Train a tokenizer
 # paths = [str(x) for x in dataset_path.glob("**/*.txt")]
-paths = [str(dataset_path / 'oscar.eo.mini.txt')]
+paths = [str(dataset_path / 'oscar.eo.1000.txt')]
 
 tokenizer = ByteLevelBPETokenizer()
-tokenizer.train(files=paths, vocab_size=52_000, min_frequency=2, special_tokens=[
+#52_000
+tokenizer.train(files=paths, vocab_size=10_000, min_frequency=2, special_tokens=[
     "<s>",
     "<pad>",
     "</s>",
@@ -102,7 +103,7 @@ print(model.num_parameters())
 
 dataset = LineByLineTextDataset(
     tokenizer=tokenizer,
-    file_path=dataset_path / "oscar.eo.mini.txt",
+    file_path=dataset_path / "oscar.eo.1000.txt",
     block_size=128,
 )
 
@@ -114,14 +115,14 @@ training_args = TrainingArguments(
     output_dir=str(run_path),
     logging_dir=str(run_path),
     overwrite_output_dir=True,
-    num_train_epochs=50,
-    per_device_train_batch_size=128,
-    logging_steps=10,
-    save_steps=1000,
+    num_train_epochs=50000,
+    per_device_train_batch_size=160,
+    logging_steps=1000,
+    save_steps=10000,
     save_total_limit=2,
     learning_rate=1e-4,
     fp16=True,
-    evaluation_strategy='epoch',
+    evaluation_strategy='steps',
 )
 
 max_length = 100
