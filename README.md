@@ -59,3 +59,11 @@ git clone https://github.com/wojtekcz/poetry2021.git
 cd poetry2021
 ./setup_colab.sh
 ```
+
+## vast.ai
+
+touch ~/.no_auto_tmux
+git clone https://github.com/wojtekcz/poetry2021.git
+cd poetry2021
+
+./setup_vastai.sh

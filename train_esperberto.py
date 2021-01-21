@@ -18,7 +18,7 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_6'
+run_path = Path('runs/esperberto') / 'run_7'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
@@ -38,7 +38,6 @@ tokenizer.train(files=paths, vocab_size=10_000, min_frequency=2, special_tokens=
 ])
 tokenizer_path.mkdir(parents=True, exist_ok=True)
 tokenizer.save_model(str(tokenizer_path))
-# tokenizer.save_model(str(tokenizer_path / 'tokenizer.json'))
 
 # tokenizer = ByteLevelBPETokenizer(
 #     tokenizer_path / "vocab.json",
@@ -99,7 +98,7 @@ config = RobertaConfig(
 # Now let's re-create our tokenizer in transformers
 tokenizer = RobertaTokenizerFast.from_pretrained(tokenizer_path, max_len=128)
 # model = RobertaForMaskedLM(config=config)
-model = RobertaForMaskedLM.from_pretrained('runs/esperberto/run_5/checkpoint-120000')
+model = RobertaForMaskedLM.from_pretrained('runs/esperberto/run_6/checkpoint-30000')
 print(f'model.num_parameters(): {model.num_parameters()}')
 
 dataset = LineByLineTextDataset(
@@ -117,8 +116,8 @@ training_args = TrainingArguments(
     logging_dir=str(run_path),
     overwrite_output_dir=True,
     num_train_epochs=5000,
-    per_device_train_batch_size=850,
-    logging_steps=500,
+    per_device_train_batch_size=1400,
+    logging_steps=100,
     save_steps=2500,
     save_total_limit=2,
     learning_rate=1e-4,
