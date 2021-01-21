@@ -22,3 +22,5 @@ git config --global user.name "Wojtek Czarnowski"
 git config --global user.email "wojtek.czarnowski@gmail.com"
 
 cd /root/poetry2021
+
+export PYTHONIOENCODING=UTF-8 
