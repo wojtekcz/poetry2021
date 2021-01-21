@@ -61,8 +61,10 @@ cd poetry2021
 ```
 
 ## vast.ai
+image huggingface/transformers-pytorch-gpu
 
 touch ~/.no_auto_tmux
+cd /root
 git clone https://github.com/wojtekcz/poetry2021.git
 cd poetry2021
 
