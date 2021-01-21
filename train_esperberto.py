@@ -18,30 +18,30 @@ from torch.utils.data.dataset import Dataset
 data_path = Path('data/esperberto')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer'
-run_path = Path('runs/esperberto') / 'run_7'
+run_path = Path('runs/esperberto') / 'run_8'
 
 # ## 1. Find a dataset
 # os.system('wget -c https://cdn-datasets.huggingface.co/EsperBERTo/data/oscar.eo.txt')
 
 # ## 2. Train a tokenizer
 # paths = [str(x) for x in dataset_path.glob("**/*.txt")]
-paths = [str(dataset_path / 'oscar.eo.1000.txt')]
+# paths = [str(dataset_path / 'oscar.eo.1000.txt')]
 
-tokenizer = ByteLevelBPETokenizer()
-# 52_000
-tokenizer.train(files=paths, vocab_size=10_000, min_frequency=2, special_tokens=[
-    "<s>",
-    "<pad>",
-    "</s>",
-    "<unk>",
-    "<mask>",
-])
-tokenizer_path.mkdir(parents=True, exist_ok=True)
-tokenizer.save_model(str(tokenizer_path))
+# tokenizer = ByteLevelBPETokenizer()
+# # 52_000
+# tokenizer.train(files=paths, vocab_size=10_000, min_frequency=2, special_tokens=[
+#     "<s>",
+#     "<pad>",
+#     "</s>",
+#     "<unk>",
+#     "<mask>",
+# ])
+# tokenizer_path.mkdir(parents=True, exist_ok=True)
+# tokenizer.save_model(str(tokenizer_path))
 
 # tokenizer = ByteLevelBPETokenizer(
-#     tokenizer_path / "vocab.json",
-#     tokenizer_path / "merges.txt",
+#     str(tokenizer_path / "vocab.json"),
+#     str(tokenizer_path / "merges.txt"),
 # )
 
 # tokenizer._tokenizer.post_processor = BertProcessing(
@@ -52,6 +52,9 @@ tokenizer.save_model(str(tokenizer_path))
 
 # print(tokenizer.encode("Mi estas Julien."))
 # print(tokenizer.encode("Mi estas Julien.").tokens)
+
+# Now let's re-create our tokenizer in transformers
+tokenizer = RobertaTokenizerFast.from_pretrained(tokenizer_path, max_len=128)
 
 # ## 3. Train a language model from scratch
 print(f'cuda: {torch.cuda.is_available()}')
@@ -95,10 +98,10 @@ config = RobertaConfig(
     hidden_dropout_prob=0.3,
 )
 
-# Now let's re-create our tokenizer in transformers
-tokenizer = RobertaTokenizerFast.from_pretrained(tokenizer_path, max_len=128)
+print(config)
+
 # model = RobertaForMaskedLM(config=config)
-model = RobertaForMaskedLM.from_pretrained('runs/esperberto/run_6/checkpoint-30000')
+model = RobertaForMaskedLM.from_pretrained('runs/esperberto/run_7/model')
 print(f'model.num_parameters(): {model.num_parameters()}')
 
 dataset = LineByLineTextDataset(
@@ -117,13 +120,16 @@ training_args = TrainingArguments(
     overwrite_output_dir=True,
     num_train_epochs=5000,
     per_device_train_batch_size=1400,
-    logging_steps=1000,
+    logging_steps=100,
+    eval_steps=1000,
     save_steps=2500,
     save_total_limit=2,
     learning_rate=1e-4,
     fp16=True,
     evaluation_strategy='steps',
+    disable_tqdm=True,
 )
+print(training_args)
 
 max_length = 100
 
