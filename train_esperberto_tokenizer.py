@@ -3,7 +3,7 @@
 from pathlib import Path
 from tokenizers import ByteLevelBPETokenizer
 
-data_path = Path('data/esperberto')
+data_path = Path('data/esperberto2')
 dataset_path = data_path / 'dataset'
 tokenizer_path = data_path / 'tokenizer2'
 
