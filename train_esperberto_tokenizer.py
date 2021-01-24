@@ -5,7 +5,7 @@ from tokenizers import ByteLevelBPETokenizer
 
 data_path = Path('data/esperberto2')
 dataset_path = data_path / 'dataset'
-tokenizer_path = data_path / 'tokenizer2'
+tokenizer_path = data_path / 'tokenizer'
 
 paths = [str(dataset_path / 'oscar.eo.1000.txt')]
 
