@@ -1,10 +1,18 @@
 python3 run_mlm.py \
-    --model_name_or_path roberta-base \
-    --dataset_name wikitext \
-    --dataset_config_name wikitext-2-raw-v1 \
+    --output_dir ./runs/esperberto3/run_1 \
+    --model_type roberta \
+    --config_name ./data/esperberto3/model_config \
+    --tokenizer_name ./data/esperberto3/tokenizer \
+    --line_by_line \
+    --max_seq_length 128 \
+    --train_file ./data/esperberto3/dataset/oscar.eo.1000x10.txt \
     --do_train \
-    --do_eval \
-    --disable_tqdm False \
-    --output_dir /content/tmp/test-mlm
+    --disable_tqdm False
 
     # --fp16 \
+    # --learning_rate 1e-4 \
+    # --num_train_epochs 5 \
+    # --save_total_limit 2 \
+    # --save_steps 2000 \
+    # --per_device_train_batch_size 16 \
+    # --seed 42
