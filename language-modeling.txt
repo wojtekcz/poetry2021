@@ -41,6 +41,13 @@ python3 run_mlm.py \
 
 # https://huggingface.co/blog/how-to-train
 # https://github.com/huggingface/transformers/blob/master/examples/legacy/run_language_modeling.py
+# https://zablo.net/blog/post/training-roberta-from-scratch-the-missing-guide-polish-language-model/
 in poetry2021
 python3 train_esperberto_tokenizer.py
 ./train_esperberto2.py
+
+
+# esperberto with run_mlm.py
+============================
+
+./train_esperberto3.py

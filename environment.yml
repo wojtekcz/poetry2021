@@ -16,12 +16,13 @@ dependencies:
   - numpy
   - transformers #==4.0.1
   - tokenizers
+  - datasets
   - nlp
   - psutil
   # - pytorch::pytorch
   # - pytorch::torchvision
   # - pytorch::torchaudio
   # - pytorch::cpuonly
-  - pip:
-    - datasets
+  # - pip:
+    # - datasets
   #   - tokenizers==0.10.0
