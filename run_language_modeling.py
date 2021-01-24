@@ -49,6 +49,7 @@ from transformers import (
     set_seed,
 )
 from transformers.trainer_utils import is_main_process
+from esperanto_dataset import EsperantoDataset
 
 
 logger = logging.getLogger(__name__)
@@ -57,6 +58,7 @@ logger = logging.getLogger(__name__)
 MODEL_CONFIG_CLASSES = list(MODEL_WITH_LM_HEAD_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
 
+max_len = 128
 
 @dataclass
 class ModelArguments:
@@ -177,6 +179,8 @@ def get_dataset(
                 cache_dir=cache_dir,
             )
 
+    if True:
+        return EsperantoDataset(max_len=max_len, evaluate=evaluate)
     if evaluate:
         return _dataset(args.eval_data_file, args.eval_ref_file)
     elif args.train_data_files:
@@ -251,10 +255,13 @@ def main():
     elif model_args.model_name_or_path:
         tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, cache_dir=model_args.cache_dir)
     else:
-        raise ValueError(
-            "You are instantiating a new tokenizer from scratch. This is not supported, but you can do it from another script, save it,"
-            "and load it from here, using --tokenizer_name"
-        )
+        if True:
+            tokenizer = EsperantoDataset.get_tokenizer(max_len)
+        else:
+            raise ValueError(
+                "You are instantiating a new tokenizer from scratch. This is not supported, but you can do it from another script, save it,"
+                "and load it from here, using --tokenizer_name"
+            )
 
     if model_args.model_name_or_path:
         model = AutoModelWithLMHead.from_pretrained(
@@ -267,7 +274,7 @@ def main():
         logger.info("Training new model from scratch")
         model = AutoModelWithLMHead.from_config(config)
 
-    model.resize_token_embeddings(len(tokenizer))
+    model.resize_token_embeddings(tokenizer._tokenizer.get_vocab_size())
 
     if config.model_type in ["bert", "roberta", "distilbert", "camembert"] and not data_args.mlm:
         raise ValueError(
@@ -276,10 +283,10 @@ def main():
         )
 
     if data_args.block_size <= 0:
-        data_args.block_size = tokenizer.max_len
+        data_args.block_size = max_len
         # Our input block size will be the max possible for the model
     else:
-        data_args.block_size = min(data_args.block_size, tokenizer.max_len)
+        data_args.block_size = min(data_args.block_size, max_len)
 
     # Get datasets
 
@@ -314,7 +321,7 @@ def main():
         data_collator=data_collator,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        prediction_loss_only=True,
+        # prediction_loss_only=True,
     )
 
     # Training
@@ -328,8 +335,8 @@ def main():
         trainer.save_model()
         # For convenience, we also re-save the tokenizer to the same directory,
         # so that you can share your model easily on huggingface.co/models =)
-        if trainer.is_world_master():
-            tokenizer.save_pretrained(training_args.output_dir)
+        # if trainer.is_world_master():
+        tokenizer.save_pretrained(training_args.output_dir)
 
     # Evaluation
     results = {}
@@ -342,12 +349,12 @@ def main():
         result = {"perplexity": perplexity}
 
         output_eval_file = os.path.join(training_args.output_dir, "eval_results_lm.txt")
-        if trainer.is_world_master():
-            with open(output_eval_file, "w") as writer:
-                logger.info("***** Eval results *****")
-                for key in sorted(result.keys()):
-                    logger.info("  %s = %s", key, str(result[key]))
-                    writer.write("%s = %s\n" % (key, str(result[key])))
+        # if trainer.is_world_master():
+        with open(output_eval_file, "w") as writer:
+            logger.info("***** Eval results *****")
+            for key in sorted(result.keys()):
+                logger.info("  %s = %s", key, str(result[key]))
+                writer.write("%s = %s\n" % (key, str(result[key])))
 
         results.update(result)
 
