@@ -11,7 +11,7 @@ rm stemmer-2.0.3.tgz
 
 ## setup python libs
 pip3 install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
-
+pip3 install datasets
 pip3 install tensorboard tensorflow glances
 
 ## download dataset
