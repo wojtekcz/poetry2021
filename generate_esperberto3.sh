@@ -1,7 +1,7 @@
 run=4a
 
 python3 run_mlm.py \
-    --model_name_or_path ./runs/esperberto3/run_4/checkpoint-25000 \
+    --model_name_or_path ./runs/esperberto3/run_4/ \
     --output_dir ./runs/esperberto3/run_${run}_logs \
     --logging_dir ./runs/esperberto3/run_${run}_logs \
     --overwrite_output_dir \
