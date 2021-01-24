@@ -43,7 +43,7 @@ from transformers import (
     set_seed,
 )
 from transformers.trainer_utils import is_main_process
-
+from esperanto_trainer import EsperantoTrainer
 
 logger = logging.getLogger(__name__)
 MODEL_CONFIG_CLASSES = list(MODEL_FOR_MASKED_LM_MAPPING.keys())
@@ -382,7 +382,7 @@ def main():
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=data_args.mlm_probability)
 
     # Initialize our Trainer
-    trainer = Trainer(
+    trainer = EsperantoTrainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets["train"] if training_args.do_train else None,
