@@ -1,0 +1,232 @@
+usage: run_mlm.py [-h] [--model_name_or_path MODEL_NAME_OR_PATH]
+                  [--model_type MODEL_TYPE] [--config_name CONFIG_NAME]
+                  [--tokenizer_name TOKENIZER_NAME] [--cache_dir CACHE_DIR]
+                  [--no_use_fast_tokenizer] [--model_revision MODEL_REVISION]
+                  [--use_auth_token] [--dataset_name DATASET_NAME]
+                  [--dataset_config_name DATASET_CONFIG_NAME]
+                  [--train_file TRAIN_FILE]
+                  [--validation_file VALIDATION_FILE] [--overwrite_cache]
+                  [--validation_split_percentage VALIDATION_SPLIT_PERCENTAGE]
+                  [--max_seq_length MAX_SEQ_LENGTH]
+                  [--preprocessing_num_workers PREPROCESSING_NUM_WORKERS]
+                  [--mlm_probability MLM_PROBABILITY] [--line_by_line]
+                  [--pad_to_max_length] --output_dir OUTPUT_DIR
+                  [--overwrite_output_dir] [--do_train] [--do_eval]
+                  [--do_predict]
+                  [--evaluation_strategy {EvaluationStrategy.NO,EvaluationStrategy.STEPS,EvaluationStrategy.EPOCH}]
+                  [--prediction_loss_only]
+                  [--per_device_train_batch_size PER_DEVICE_TRAIN_BATCH_SIZE]
+                  [--per_device_eval_batch_size PER_DEVICE_EVAL_BATCH_SIZE]
+                  [--per_gpu_train_batch_size PER_GPU_TRAIN_BATCH_SIZE]
+                  [--per_gpu_eval_batch_size PER_GPU_EVAL_BATCH_SIZE]
+                  [--gradient_accumulation_steps GRADIENT_ACCUMULATION_STEPS]
+                  [--eval_accumulation_steps EVAL_ACCUMULATION_STEPS]
+                  [--learning_rate LEARNING_RATE]
+                  [--weight_decay WEIGHT_DECAY] [--adam_beta1 ADAM_BETA1]
+                  [--adam_beta2 ADAM_BETA2] [--adam_epsilon ADAM_EPSILON]
+                  [--max_grad_norm MAX_GRAD_NORM]
+                  [--num_train_epochs NUM_TRAIN_EPOCHS]
+                  [--max_steps MAX_STEPS]
+                  [--lr_scheduler_type {SchedulerType.LINEAR,SchedulerType.COSINE,SchedulerType.COSINE_WITH_RESTARTS,SchedulerType.POLYNOMIAL,SchedulerType.CONSTANT,SchedulerType.CONSTANT_WITH_WARMUP}]
+                  [--warmup_steps WARMUP_STEPS] [--logging_dir LOGGING_DIR]
+                  [--logging_first_step] [--logging_steps LOGGING_STEPS]
+                  [--save_steps SAVE_STEPS]
+                  [--save_total_limit SAVE_TOTAL_LIMIT] [--no_cuda]
+                  [--seed SEED] [--fp16] [--fp16_opt_level FP16_OPT_LEVEL]
+                  [--fp16_backend {auto,amp,apex}] [--local_rank LOCAL_RANK]
+                  [--tpu_num_cores TPU_NUM_CORES] [--tpu_metrics_debug]
+                  [--debug] [--dataloader_drop_last] [--eval_steps EVAL_STEPS]
+                  [--dataloader_num_workers DATALOADER_NUM_WORKERS]
+                  [--past_index PAST_INDEX] [--run_name RUN_NAME]
+                  [--disable_tqdm DISABLE_TQDM] [--no_remove_unused_columns]
+                  [--label_names LABEL_NAMES [LABEL_NAMES ...]]
+                  [--load_best_model_at_end]
+                  [--metric_for_best_model METRIC_FOR_BEST_MODEL]
+                  [--greater_is_better GREATER_IS_BETTER] [--ignore_data_skip]
+                  [--sharded_ddp] [--deepspeed DEEPSPEED]
+                  [--label_smoothing_factor LABEL_SMOOTHING_FACTOR]
+                  [--adafactor]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --model_name_or_path MODEL_NAME_OR_PATH
+                        The model checkpoint for weights initialization.Don't
+                        set if you want to train a model from scratch.
+  --model_type MODEL_TYPE
+                        If training from scratch, pass a model type from the
+                        list: layoutlm, distilbert, albert, bart, camembert,
+                        xlm-roberta, longformer, roberta, squeezebert, bert,
+                        mobilebert, flaubert, xlm, electra, reformer, funnel,
+                        mpnet, tapas
+  --config_name CONFIG_NAME
+                        Pretrained config name or path if not the same as
+                        model_name
+  --tokenizer_name TOKENIZER_NAME
+                        Pretrained tokenizer name or path if not the same as
+                        model_name
+  --cache_dir CACHE_DIR
+                        Where do you want to store the pretrained models
+                        downloaded from huggingface.co
+  --no_use_fast_tokenizer
+                        Whether to use one of the fast tokenizer (backed by
+                        the tokenizers library) or not.
+  --model_revision MODEL_REVISION
+                        The specific model version to use (can be a branch
+                        name, tag name or commit id).
+  --use_auth_token      Will use the token generated when running
+                        `transformers-cli login` (necessary to use this script
+                        with private models).
+  --dataset_name DATASET_NAME
+                        The name of the dataset to use (via the datasets
+                        library).
+  --dataset_config_name DATASET_CONFIG_NAME
+                        The configuration name of the dataset to use (via the
+                        datasets library).
+  --train_file TRAIN_FILE
+                        The input training data file (a text file).
+  --validation_file VALIDATION_FILE
+                        An optional input evaluation data file to evaluate the
+                        perplexity on (a text file).
+  --overwrite_cache     Overwrite the cached training and evaluation sets
+  --validation_split_percentage VALIDATION_SPLIT_PERCENTAGE
+                        The percentage of the train set used as validation set
+                        in case there's no validation split
+  --max_seq_length MAX_SEQ_LENGTH
+                        The maximum total input sequence length after
+                        tokenization. Sequences longer than this will be
+                        truncated.
+  --preprocessing_num_workers PREPROCESSING_NUM_WORKERS
+                        The number of processes to use for the preprocessing.
+  --mlm_probability MLM_PROBABILITY
+                        Ratio of tokens to mask for masked language modeling
+                        loss
+  --line_by_line        Whether distinct lines of text in the dataset are to
+                        be handled as distinct sequences.
+  --pad_to_max_length   Whether to pad all samples to `max_seq_length`. If
+                        False, will pad the samples dynamically when batching
+                        to the maximum length in the batch.
+  --output_dir OUTPUT_DIR
+                        The output directory where the model predictions and
+                        checkpoints will be written.
+  --overwrite_output_dir
+                        Overwrite the content of the output directory.Use this
+                        to continue training if output_dir points to a
+                        checkpoint directory.
+  --do_train            Whether to run training.
+  --do_eval             Whether to run eval on the dev set.
+  --do_predict          Whether to run predictions on the test set.
+  --evaluation_strategy {EvaluationStrategy.NO,EvaluationStrategy.STEPS,EvaluationStrategy.EPOCH}
+                        The evaluation strategy to use.
+  --prediction_loss_only
+                        When performing evaluation and predictions, only
+                        returns the loss.
+  --per_device_train_batch_size PER_DEVICE_TRAIN_BATCH_SIZE
+                        Batch size per GPU/TPU core/CPU for training.
+  --per_device_eval_batch_size PER_DEVICE_EVAL_BATCH_SIZE
+                        Batch size per GPU/TPU core/CPU for evaluation.
+  --per_gpu_train_batch_size PER_GPU_TRAIN_BATCH_SIZE
+                        Deprecated, the use of `--per_device_train_batch_size`
+                        is preferred. Batch size per GPU/TPU core/CPU for
+                        training.
+  --per_gpu_eval_batch_size PER_GPU_EVAL_BATCH_SIZE
+                        Deprecated, the use of `--per_device_eval_batch_size`
+                        is preferred.Batch size per GPU/TPU core/CPU for
+                        evaluation.
+  --gradient_accumulation_steps GRADIENT_ACCUMULATION_STEPS
+                        Number of updates steps to accumulate before
+                        performing a backward/update pass.
+  --eval_accumulation_steps EVAL_ACCUMULATION_STEPS
+                        Number of predictions steps to accumulate before
+                        moving the tensors to the CPU.
+  --learning_rate LEARNING_RATE
+                        The initial learning rate for Adam.
+  --weight_decay WEIGHT_DECAY
+                        Weight decay if we apply some.
+  --adam_beta1 ADAM_BETA1
+                        Beta1 for Adam optimizer
+  --adam_beta2 ADAM_BETA2
+                        Beta2 for Adam optimizer
+  --adam_epsilon ADAM_EPSILON
+                        Epsilon for Adam optimizer.
+  --max_grad_norm MAX_GRAD_NORM
+                        Max gradient norm.
+  --num_train_epochs NUM_TRAIN_EPOCHS
+                        Total number of training epochs to perform.
+  --max_steps MAX_STEPS
+                        If > 0: set total number of training steps to perform.
+                        Override num_train_epochs.
+  --lr_scheduler_type {SchedulerType.LINEAR,SchedulerType.COSINE,SchedulerType.COSINE_WITH_RESTARTS,SchedulerType.POLYNOMIAL,SchedulerType.CONSTANT,SchedulerType.CONSTANT_WITH_WARMUP}
+                        The scheduler type to use.
+  --warmup_steps WARMUP_STEPS
+                        Linear warmup over warmup_steps.
+  --logging_dir LOGGING_DIR
+                        Tensorboard log dir.
+  --logging_first_step  Log the first global_step
+  --logging_steps LOGGING_STEPS
+                        Log every X updates steps.
+  --save_steps SAVE_STEPS
+                        Save checkpoint every X updates steps.
+  --save_total_limit SAVE_TOTAL_LIMIT
+                        Limit the total amount of checkpoints.Deletes the
+                        older checkpoints in the output_dir. Default is
+                        unlimited checkpoints
+  --no_cuda             Do not use CUDA even when it is available
+  --seed SEED           random seed for initialization
+  --fp16                Whether to use 16-bit (mixed) precision (through
+                        NVIDIA Apex) instead of 32-bit
+  --fp16_opt_level FP16_OPT_LEVEL
+                        For fp16: Apex AMP optimization level selected in
+                        ['O0', 'O1', 'O2', and 'O3'].See details at
+                        https://nvidia.github.io/apex/amp.html
+  --fp16_backend {auto,amp,apex}
+                        The backend to be used for mixed precision.
+  --local_rank LOCAL_RANK
+                        For distributed training: local_rank
+  --tpu_num_cores TPU_NUM_CORES
+                        TPU: Number of TPU cores (automatically passed by
+                        launcher script)
+  --tpu_metrics_debug   Deprecated, the use of `--debug` is preferred. TPU:
+                        Whether to print debug metrics
+  --debug               Whether to print debug metrics on TPU
+  --dataloader_drop_last
+                        Drop the last incomplete batch if it is not divisible
+                        by the batch size.
+  --eval_steps EVAL_STEPS
+                        Run an evaluation every X steps.
+  --dataloader_num_workers DATALOADER_NUM_WORKERS
+                        Number of subprocesses to use for data loading
+                        (PyTorch only). 0 means that the data will be loaded
+                        in the main process.
+  --past_index PAST_INDEX
+                        If >=0, uses the corresponding part of the output as
+                        the past state for next step.
+  --run_name RUN_NAME   An optional descriptor for the run. Notably used for
+                        wandb logging.
+  --disable_tqdm DISABLE_TQDM
+                        Whether or not to disable the tqdm progress bars.
+  --no_remove_unused_columns
+                        Remove columns not required by the model when using an
+                        nlp.Dataset.
+  --label_names LABEL_NAMES [LABEL_NAMES ...]
+                        The list of keys in your dictionary of inputs that
+                        correspond to the labels.
+  --load_best_model_at_end
+                        Whether or not to load the best model found during
+                        training at the end of training.
+  --metric_for_best_model METRIC_FOR_BEST_MODEL
+                        The metric to use to compare two different models.
+  --greater_is_better GREATER_IS_BETTER
+                        Whether the `metric_for_best_model` should be
+                        maximized or not.
+  --ignore_data_skip    When resuming training, whether or not to skip the
+                        first epochs and batches to get to the same training
+                        data.
+  --sharded_ddp         Whether or not to use sharded DDP training (in
+                        distributed training only).
+  --deepspeed DEEPSPEED
+                        Enable deepspeed and pass the path to deepspeed json
+                        config file (e.g. ds_config.json)
+  --label_smoothing_factor LABEL_SMOOTHING_FACTOR
+                        The label smoothing epsilon to apply (zero means no
+                        label smoothing).
+  --adafactor           Whether or not to replace Adam by Adafactor.
