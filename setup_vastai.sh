@@ -1,6 +1,6 @@
 # vastai setup
 
-apt install -y wget
+apt install -y wget mc
 
 ## setup stemmer
 dpkg --add-architecture i386 && apt-get -qq update && apt-get -qq install libc6:i386 libncurses5:i386 libstdc++6:i386
