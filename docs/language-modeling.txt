@@ -47,7 +47,15 @@ python3 train_esperberto_tokenizer.py
 ./train_esperberto2.py
 
 
-# esperberto with run_mlm.py
+# smallberta esperanto with run_mlm.py
+======================================
+
+cd esperberto/esperberto3_mlm
+./train_esperberto3.sh
+
+# smallberta with run_mlm.py
 ============================
 
-./train_esperberto3.py
+cd src/roberta3_mlm_bpetok
+python3 train_tokenizer.py
+./train_lm.sh
