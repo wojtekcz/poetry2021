@@ -1,6 +1,8 @@
+run=4
+
 python3 run_mlm.py \
-    --output_dir ./runs/esperberto3/run_1 \
-    --logging_dir ./runs/esperberto3/run_1_logs \
+    --output_dir ./runs/esperberto3/run_${run} \
+    --logging_dir ./runs/esperberto3/run_${run}_logs \
     --overwrite_output_dir \
     --model_type roberta \
     --config_name ./data/esperberto3/model_config \
@@ -12,10 +14,9 @@ python3 run_mlm.py \
     --fp16 \
     --learning_rate 1e-3 \
     --per_device_train_batch_size 1300 \
-    --num_train_epochs 40 \
+    --num_train_epochs 4000 \
     --seed 42 \
+    --save_total_limit 2 \
+    --save_steps 1000 \
     --logging_steps 10 \
     --disable_tqdm False
-
-    # --save_total_limit 2 \
-    # --save_steps 2000 \
