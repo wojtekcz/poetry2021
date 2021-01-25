@@ -56,6 +56,12 @@ cd esperberto/esperberto3_mlm
 # smallberta with run_mlm.py
 ============================
 
-cd src/roberta3_mlm_bpetok
+## bpe tokenizer
+cd src/pan_tadeusz2_mlm_bpetok
 python3 train_tokenizer.py
+./train_lm.sh
+
+## stemmer and matching tokenizer
+
+cd src/pan_tadeusz3_mlm_stem
 ./train_lm.sh
