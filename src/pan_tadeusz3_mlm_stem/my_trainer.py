@@ -13,7 +13,7 @@ class MyTrainer(Trainer):
         metric_key_prefix: str = "eval",
     ) -> Dict[str, float]:
         print("\nevaluate()")
-        prime_str = '<s> _cap_ lit++ --wo ! _cap_ oj++ --czyz++ --no mo++ --ja'
+        prime_str = '_cap_ lit++ --wo ! _cap_ oj++ --czyz++ --no mo++ --ja'
         max_length = 100
         ids = self.tokenizer.encode(prime_str, return_tensors="pt")[:, :-1]
         preds = self.model.generate(
