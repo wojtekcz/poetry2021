@@ -23,7 +23,7 @@ PYTHONIOENCODING=UTF-8 python3 run_mlm.py \
     --validation_file ${home_dir}/data/pan_tadeusz3/dataset/pan_tadeusz.syl1.txt \
     --do_eval \
     --evaluation_strategy 'steps' \
-    --eval_steps 10 \
+    --eval_steps 1000 \
     --per_device_eval_batch_size 800
 
     # --disable_tqdm False
