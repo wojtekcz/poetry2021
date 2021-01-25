@@ -1,12 +1,11 @@
 home_dir=/root/poetry2021
 # home_dir=/workspace/poetry2021.gt
-run=1
+run=2
 PYTHONIOENCODING=UTF-8 python3 run_mlm.py \
     --output_dir ${home_dir}/runs/pan_tadeusz3/run_${run} \
     --logging_dir ${home_dir}/runs/pan_tadeusz3/run_${run}_logs \
     --overwrite_output_dir \
-    --model_type roberta \
-    --config_name ${home_dir}/data/pan_tadeusz3/model_config \
+    --model_name_or_path ${home_dir}/runs/pan_tadeusz3/run_1/checkpoint-6000 \
     --tokenizer_name ${home_dir}/data/pan_tadeusz3/my-pretrained-tokenizer-fast3 \
     --max_seq_length 128 \
     --line_by_line \
@@ -27,3 +26,5 @@ PYTHONIOENCODING=UTF-8 python3 run_mlm.py \
     --per_device_eval_batch_size 800
 
     # --disable_tqdm False
+    # --model_type roberta \
+    # --config_name ${home_dir}/data/pan_tadeusz3/model_config \
