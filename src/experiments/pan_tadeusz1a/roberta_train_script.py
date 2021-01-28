@@ -12,10 +12,10 @@ from transformers import LineByLineTextDataset, DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 
 
-dataset_path = Path('data')/'pan_tadeusz'
-fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
-run_path = Path('runs')/'run_1'
-model_path = run_path/'model'
+dataset_path = Path('data') / 'pan_tadeusz'
+fn_corpus_sampled = dataset_path / 'pan_tadeusz.sampled1.txt'
+run_path = Path('runs') / 'run_1'
+model_path = run_path / 'model'
 
 # Check that PyTorch sees it
 USE_GPU = torch.cuda.is_available()
@@ -27,7 +27,7 @@ print(f'USE_GPU={USE_GPU}')
 # 2. Create a tokenizer
 # load our tokenizer
 text_tokenizer = TextTokenizer(dataset_path)
-text_tokenizer.load_vocab(dataset_path/'vocab.json')
+text_tokenizer.load_vocab(dataset_path / 'vocab.json')
 
 # Create transformers compatible tokenizer
 tokenizer = Tokenizer(WordLevel(text_tokenizer.vocab))
@@ -36,13 +36,13 @@ tokenizer.model.unk_token = '<unk>'
 
 tokenizer_path = dataset_path / 'tokenizer1'
 tokenizer_path.mkdir(parents=True, exist_ok=True)
-tokenizer.save(str(tokenizer_path/"tokenizer.json"))
+tokenizer.save(str(tokenizer_path / "tokenizer.json"))
 
 # Re-create as roberta compatible tokenizer
 tokenizer_path = dataset_path / 'tokenizer1'
 print(tokenizer_path)
 
-tokenizer2 = PreTrainedTokenizerFast(tokenizer_file=str(tokenizer_path/"tokenizer.json"))
+tokenizer2 = PreTrainedTokenizerFast(tokenizer_file=str(tokenizer_path / "tokenizer.json"))
 tokenizer2._tokenizer.post_processor = BertProcessing(
     ("</s>", tokenizer2._tokenizer.token_to_id("</s>")),
     ("<s>", tokenizer2._tokenizer.token_to_id("<s>")),

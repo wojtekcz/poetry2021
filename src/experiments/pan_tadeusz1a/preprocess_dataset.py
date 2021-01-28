@@ -15,17 +15,17 @@ def print_head(file_path, n_lines=10):
     print('\n'.join(file_path.read_text().split('\n')[:n_lines]))
 
 
-dataset_path = Path('data')/'pan_tadeusz'
+dataset_path = Path('data') / 'pan_tadeusz'
 
-fn_corpus_char = dataset_path/'pan_tadeusz.txt'
-fn_corpus_caps = dataset_path/'pan_tadeusz.caps1.txt'
-fn_corpus_syl = dataset_path/'pan_tadeusz.syl1.txt'
-fn_corpus_sampled = dataset_path/'pan_tadeusz.sampled1.txt'
+fn_corpus_char = dataset_path / 'pan_tadeusz.txt'
+fn_corpus_caps = dataset_path / 'pan_tadeusz.caps1.txt'
+fn_corpus_syl = dataset_path / 'pan_tadeusz.syl1.txt'
+fn_corpus_sampled = dataset_path / 'pan_tadeusz.sampled1.txt'
 
 print(f'Corpus: {fn_corpus_char}')
 print_head(fn_corpus_char)
 
-# Plik wejściowy (korpus) to duży plik tekstowy. 
+# Plik wejściowy (korpus) to duży plik tekstowy.
 tokenizer = TextTokenizer(dataset_path)
 processor = TextProcessor(dataset_path, tokenizer)
 
@@ -42,11 +42,12 @@ file_tok = processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
 
 # create & save vocab
 tokenizer.create_vocab(file_tok)
-tokenizer.save_vocab(dataset_path/'vocab.json')
+tokenizer.save_vocab(dataset_path / 'vocab.json')
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
 print(f'\nTesting tokenizer: {text}')
-text_tok = tokenizer.str2syl2tok(text); print(text_tok)
+text_tok = tokenizer.str2syl2tok(text)
+print(text_tok)
 
 print(tokenizer.syl2str(text_tok))
 text_decoded = tokenizer.decode_caps(tokenizer.syl2str(text_tok, delim=''))[:300]
