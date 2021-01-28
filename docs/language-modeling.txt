@@ -63,5 +63,8 @@ python3 train_tokenizer.py
 
 ## stemmer and matching tokenizer
 
-cd src/pan_tadeusz3_mlm_stem
+cd src/experiments/pan_tadeusz3_mlm_stem
+./train_lm.sh
+
+cd src/experiments/pan_tadeusz4_mlm_stem
 ./train_lm.sh
