@@ -6,3 +6,4 @@ __pycache__
 /colab_ssh/private_key.pem
 /colab_ssh/authorized_keys
 /notebooks/data
+.DS_Store
