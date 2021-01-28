@@ -21,6 +21,7 @@ dataset_path = data_path / 'dataset'
 fn_corpus_char = dataset_path / 'pan_tadeusz.txt'
 fn_corpus_caps = dataset_path / 'pan_tadeusz.caps1.txt'
 fn_corpus_syl = dataset_path / 'pan_tadeusz.syl1.txt'
+fn_corpus_syl2 = dataset_path / 'pan_tadeusz.syl2.txt'
 fn_corpus_sampled = dataset_path / 'pan_tadeusz.sampled1.txt'
 
 print(f'Corpus: {fn_corpus_char}')
@@ -37,6 +38,10 @@ print_head(fn_corpus_caps)
 print('\nPodział korpusu na sylaby "++ --"')
 Stemmer.stem_file(fn_corpus_caps, fn_corpus_syl)
 print_head(fn_corpus_syl)
+
+print('\nPodział korpusu na sylaby " ##"')
+Stemmer.stem_file(fn_corpus_caps, fn_corpus_syl2, stem_delim=' ##')
+print_head(fn_corpus_syl2)
 
 # Załadowanie do pamięci i tokenizacja
 file_tok = processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
