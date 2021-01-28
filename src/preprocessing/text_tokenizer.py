@@ -72,7 +72,7 @@ class TextTokenizer:
         self.vocab = {tok: idx for (idx, tok) in enumerate(all_tokens)}
 
     def save_vocab(self, vocab_path: Path):
-        vocab_path.write_text(json.dumps(self.vocab, indent=4), encoding='utf-8')
+        vocab_path.write_text(json.dumps(self.vocab, indent=4, ensure_ascii=False), encoding='utf-8')
 
     def load_vocab(self, vocab_path: Path):
         self.vocab = json.loads(vocab_path.read_text())
