@@ -22,11 +22,11 @@ class TextTokenizer:
     # Zamieniamy duże litery na małe dodając tokeny `_up_` (dla wyrazów pisanych wielkimi literami) lub `_cap_` (dla wyrazów pisanych z wielkiej litery).
     @staticmethod
     def do_caps(a_str: str) -> str:
-        TOK_UP, TOK_CAP = ' _up_ ', ' _cap_ '
+        TOK_UP, TOK_CAP = '_up_ ', '_cap_ '
         res = []
         # re_word = re.compile('\w')
         for s in re.findall(r'\w+|\W+', a_str):
-            res += ([TOK_UP, s.lower()] if (s.isupper() and (len(s)>2))
+            res += ([TOK_UP, s.lower()] if (s.isupper() and (len(s) > 2))
                     else [TOK_CAP, s.lower()] if s.istitle()
                     else [s.lower()])
         return ''.join(res)
