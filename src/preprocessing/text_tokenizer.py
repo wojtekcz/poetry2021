@@ -12,7 +12,7 @@ class TextTokenizer:
         # remove +,- chars from punctuation set to keep syllables e.g.'--PO++' intact
         # remove _ char to keep tokens intact
         # remove <,> chars to keep tokens intact
-        punctuation=re.sub('[_\\+-<>]', '', string.punctuation)
+        punctuation = re.sub('[_\\+-<>]', '', string.punctuation)
         self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])')
 
         self.dataset_path = dataset_path
@@ -26,8 +26,8 @@ class TextTokenizer:
         res = []
         # re_word = re.compile('\w')
         for s in re.findall(r'\w+|\W+', a_str):
-            res += ([TOK_UP,s.lower()] if (s.isupper() and (len(s)>2))
-                    else [TOK_CAP,s.lower()] if s.istitle()
+            res += ([TOK_UP, s.lower()] if (s.isupper() and (len(s)>2))
+                    else [TOK_CAP, s.lower()] if s.istitle()
                     else [s.lower()])
         return ''.join(res)
 
