@@ -66,7 +66,7 @@ class TextTokenizer:
         outputs:
             self.vocab dictionary {tok:idx}
         """
-        spec_tokens = ['<unk>', '<pad>', '<mask>', '<s>', '</s>', '_eol_', '_cap_', '_up_']
+        spec_tokens = ['<s>', '<pad>', '</s>', '<unk>', '<mask>', '_eol_', '_cap_', '_up_']
         all_tokens = []; all_tokens.extend(spec_tokens)
         all_tokens.extend(sorted(list(set([x for x in file_tok if not x in spec_tokens]))))
         self.vocab = {tok: idx for (idx, tok) in enumerate(all_tokens)}
