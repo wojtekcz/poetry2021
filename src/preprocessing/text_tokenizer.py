@@ -32,6 +32,12 @@ class TextTokenizer:
         return ''.join(res)
 
     @staticmethod
+    def separate_punctuation(a_str: str) -> str:
+        punct_chars = set(':;.,!(){}«»"?')
+        a_str = ''.join([f' {x} ' if x in punct_chars else x for x in a_str])
+        return re.sub(' +', ' ', a_str)
+
+    @staticmethod
     def decode_caps(e_str: str) -> str:
         # decode _eol_, _cap_ and _up_
         # leave <unk> token alone
