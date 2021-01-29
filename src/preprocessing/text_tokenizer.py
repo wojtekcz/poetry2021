@@ -45,22 +45,30 @@ class TextTokenizer:
         e_syl = e_str.split(' ')
         e_syl2 = []
 
-        cap = False; up = False
+        cap = False
+        up = False
 
         for syl in e_syl:
-            if syl == '_eol_': syl = '\n'
+            if syl == '_eol_':
+                syl = '\n'
 
             if syl not in ['_cap_', '_up_', '<s>', '</s>']:
-                if cap == True: syl = syl.title(); cap = False
-                if up == True: syl = syl.upper(); up = False        
+                if cap is True:
+                    syl = syl.title()
+                    cap = False
+                if up is True:
+                    syl = syl.upper()
+                    up = False
                 e_syl2.append(syl)
 
-            if syl == '_cap_': cap = True
-            if syl == '_up_': up = True
+            if syl == '_cap_':
+                cap = True
+            if syl == '_up_':
+                up = True
 
         return ' '.join(e_syl2)
 
-    def tokenize(self, a_str: str, repl_unk=True) -> [str]: 
+    def tokenize(self, a_str: str, repl_unk=True) -> [str]:
         strings = self.re_tok.sub(r' \1 ', a_str).replace('\n', ' _eol_ ').split()
         if repl_unk:
             strings = [self.str2tok(s) for s in strings]
@@ -73,8 +81,9 @@ class TextTokenizer:
             self.vocab dictionary {tok:idx}
         """
         spec_tokens = ['<s>', '<pad>', '</s>', '<unk>', '<mask>', '_eol_', '_cap_', '_up_']
-        all_tokens = []; all_tokens.extend(spec_tokens)
-        all_tokens.extend(sorted(list(set([x for x in file_tok if not x in spec_tokens]))))
+        all_tokens = []
+        all_tokens.extend(spec_tokens)
+        all_tokens.extend(sorted(list(set([x for x in file_tok if x not in spec_tokens]))))
         self.vocab = {tok: idx for (idx, tok) in enumerate(all_tokens)}
 
     def save_vocab(self, vocab_path: Path):
@@ -120,9 +129,9 @@ class TextTokenizer:
         return s
 
     @staticmethod
-    def fix_punctuation(s: str) -> str: 
+    def fix_punctuation(s: str) -> str:
         repl_list = [
-            ('\n ', '\n'), 
+            ('\n ', '\n'),
             (' ,', ','),
             (' .', '.'),
             (' !', '!'),
@@ -134,16 +143,17 @@ class TextTokenizer:
             ('» ', '»'),
             (' :', ':')
         ]
-        
+
         for repl in repl_list:
             s = s.replace(repl[0], repl[1])
-        
+
         return s
 
     # Sformatujmy zdekodowany tekst w HTML i zaznaczmy na czerwono sylaby, z których nie dało się skleić słów.
     class X(str):
         def rpl(self, p, c='lightgray'):
             return TextTokenizer.X(self.replace(p, f'<font color="{c}">{p}</font>'))
+
         def rpl2(self, p, p2):
             return TextTokenizer.X(self.replace(p, p2))
 
