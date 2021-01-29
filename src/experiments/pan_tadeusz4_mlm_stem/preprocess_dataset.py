@@ -48,7 +48,7 @@ class DatasetPreprocessor:
         self.tokenizer.save_vocab(vocab_path)
         return file_tok
 
-    def create_sampled_file(self, fn_corpus_sampled: Path, min_n_samples: int, chunk_len: int):
+    def create_sampled_file(self, file_tok: [str], fn_corpus_sampled: Path, min_n_samples: int, chunk_len: int):
         print(f"\nLet's make dataset with more than minimum {min_n_samples} samples")
         line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
         n_samples = len(file_tok) // chunk_len
@@ -88,4 +88,4 @@ print(tokenizer.format_html(e_str))
 
 min_n_samples = 1000  # 50000
 chunk_len = 100  # 400
-preprocessor.create_sampled_file(fn_corpus_sampled, min_n_samples, chunk_len)
+preprocessor.create_sampled_file(file_tok, fn_corpus_sampled, min_n_samples, chunk_len)
