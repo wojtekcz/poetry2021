@@ -14,10 +14,11 @@ dataset_path = data_path / 'dataset'
 fn_corpus_char = dataset_path / 'pan_tadeusz.txt'
 fn_corpus_caps = dataset_path / 'pan_tadeusz.caps1.txt'
 fn_corpus_syl = dataset_path / 'pan_tadeusz.syl1.txt'
-fn_corpus_syl2 = dataset_path / 'pan_tadeusz.syl2.txt'
 fn_corpus_sampled = dataset_path / 'pan_tadeusz.sampled1.txt'
 
 vocab_path = data_path / 'vocab.json'
+stem_delim = '++ --'
+# stem_delim = ' ##'
 
 
 def print_head(file_path, n_lines=10):
@@ -68,19 +69,18 @@ print(f'Corpus: {fn_corpus_char}')
 print_head(fn_corpus_char)
 
 preprocessor.tokenize_caps(fn_corpus_char, fn_corpus_caps)
-preprocessor.stem_corpus(fn_corpus_caps, fn_corpus_syl, stem_delim='++ --')
-preprocessor.stem_corpus(fn_corpus_caps, fn_corpus_syl2, stem_delim=' ##')
+preprocessor.stem_corpus(fn_corpus_caps, fn_corpus_syl, stem_delim=stem_delim)
 
 file_tok = preprocessor.load_and_create_vocab(fn_corpus_syl, vocab_path)
 tokenizer = preprocessor.tokenizer
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
 print(f'\nTesting tokenizer: {text}')
-text_tok = tokenizer.str2syl2tok(text)
+text_tok = tokenizer.str2syl2tok(text, stem_delim=stem_delim)
 print(text_tok)
 
-print(tokenizer.syl2str(text_tok))
-text_decoded = tokenizer.decode_caps(tokenizer.syl2str(text_tok, delim=''))[:300]
+print(tokenizer.syl2str(text_tok, stem_delim=stem_delim))
+text_decoded = tokenizer.decode_caps(tokenizer.syl2str(text_tok, delim='', stem_delim=stem_delim))[:300]
 print(text_decoded)
 e_str = tokenizer.fix_punctuation(text_decoded)[:400]
 print(e_str)

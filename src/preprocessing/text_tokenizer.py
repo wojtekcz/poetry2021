@@ -10,9 +10,10 @@ class TextTokenizer:
     def __init__(self, dataset_path: Path):
         # taken from fastai/text.py
         # remove +,- chars from punctuation set to keep syllables e.g.'--PO++' intact
+        # remove # char from punctuation set to keep syllables e.g.'##PO' intact
         # remove _ char to keep tokens intact
         # remove <,> chars to keep tokens intact
-        punctuation = re.sub('[_\\+-<>]', '', string.punctuation)
+        punctuation = re.sub('[##_\\+-<>]', '', string.punctuation)
         self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])')
 
         self.dataset_path = dataset_path
@@ -99,13 +100,14 @@ class TextTokenizer:
         return self.vocab.get(tok, 0)
 
     # Przyda nam się funkcja do zakodowania dowolnego tekstu na listę zsylabizowanych tokenów:
-    def str2syl2tok(self, text: str) -> [str]:  
+    def str2syl2tok(self, text: str, stem_delim='++ --') -> [str]:
         fn_tmp_text_caps = self.tmp_path / 'tmp_text_caps1.txt'
         fn_tmp_text_syl = self.tmp_path / 'tmp_text_syl1.txt'
 
         text = self.do_caps(text)
+        text = self.separate_punctuation(text)
         fn_tmp_text_caps.open('w').write(text)
-        Stemmer.stem_file(fn_tmp_text_caps, fn_tmp_text_syl)
+        Stemmer.stem_file(fn_tmp_text_caps, fn_tmp_text_syl, stem_delim=stem_delim)
         text_syl = fn_tmp_text_syl.open('r').read()
 
         # kill last \n eol char possibly added by stemmer
@@ -117,11 +119,11 @@ class TextTokenizer:
 
     # Funkcje pomocnicze do zdekodowania listy tokenów na tekst:
     @staticmethod
-    def syl2str(a_list: [str], delim='/') -> str:
+    def syl2str(a_list: [str], delim='/', stem_delim='++ --') -> str:
         s = ' '.join(a_list)
 
         repl_list = [
-            ('++ --', delim), 
+            (stem_delim, delim)
         ]
         for repl in repl_list:
             s = s.replace(repl[0], repl[1])
