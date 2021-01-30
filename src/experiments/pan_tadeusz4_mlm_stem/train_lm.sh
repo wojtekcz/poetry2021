@@ -1,12 +1,12 @@
 home_dir=/root/poetry2021
 # home_dir=/workspace/poetry2021.gt
-run=1
+run=2
 PYTHONIOENCODING=UTF-8 python3 run_mlm.py \
     --output_dir ${home_dir}/runs/pan_tadeusz4/run_${run} \
     --logging_dir ${home_dir}/runs/pan_tadeusz4/run_${run}_logs \
     --overwrite_output_dir \
     --model_type roberta \
-    --config_name ${home_dir}/data/pan_tadeusz4/model_config \
+    --config_name ${home_dir}/data/pan_tadeusz4/model_config2 \
     --tokenizer_name ${home_dir}/data/pan_tadeusz4/tokenizer \
     --max_seq_length 128 \
     --line_by_line \
