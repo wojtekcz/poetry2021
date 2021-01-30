@@ -7,3 +7,4 @@ __pycache__
 /colab_ssh/authorized_keys
 /notebooks/data
 .DS_Store
+colab_ssh/kowalewski230.sshv1.pem

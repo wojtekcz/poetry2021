@@ -52,6 +52,13 @@ in notebook:
 ```
 !SSH_RELAY_HOST=<user>@<host> SSH_RELAY_PORT=<port> bash <(curl -s https://raw.githubusercontent.com/wojtekcz/poetry2021/master/colab_ssh/colab_ssh_server.sh)
 ```
+
+### run ssh
+```
+ssh colabp
+tmux -CC
+```
+
 ### setup runtime env, download sources & dataset
 ```
 cd /content
