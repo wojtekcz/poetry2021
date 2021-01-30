@@ -1,8 +1,8 @@
 home_dir=/root/poetry2021
-# home_dir=/workspace/poetrśy2021.gt
+# home_dir=/workspace/poetry2021.gt
 run=1
 PYTHONIOENCODING=UTF-8 python3 run_mlm.py \
-    --output_dir ${home_dir}/runs/ch/run_${run} \
+    --output_dir ${home_dir}/runs/pan_tadeusz4/run_${run} \
     --logging_dir ${home_dir}/runs/pan_tadeusz4/run_${run}_logs \
     --overwrite_output_dir \
     --model_type roberta \
