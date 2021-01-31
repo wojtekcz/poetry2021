@@ -1,6 +1,6 @@
 home_dir=/root/poetry2021
 # home_dir=/workspace/poetry2021.gt
-run=2
+run=3
 
 # TODO: + use small GPT2 model, + use pan_tadeusz dataset
 PYTHONIOENCODING=UTF-8 python3 run_clm.py \
