@@ -1,0 +1,69 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: pan_tadeusz5_clm_finetuning",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspace/poetry2021.gt/src/experiments/pan_tadeusz5_clm_finetuning/run_clm.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--model_type", "gpt2",
+                "--do_train",
+                "--train_file", "/workspace/poetry2021.gt/data/pan_tadeusz5/dataset/pan_tadeusz.sampled1.txt",
+                "--output_dir", "/workspace/poetry2021.gt/runs/pan_tadeusz5/run_${run}",
+                "--logging_dir", "/workspace/poetry2021.gt/runs/pan_tadeusz5/run_${run}_logs",
+                "--overwrite_output_dir",
+                "--config_name", "/workspace/poetry2021.gt/data/pan_tadeusz5/model_config2",
+                "--tokenizer_name", "/workspace/poetry2021.gt/data/pan_tadeusz5/tokenizer2",
+                "--seed", "42",
+                "--save_total_limit", "2",
+                "--save_steps", "1000",
+                "--logging_steps", "10",
+                "--num_train_epochs", "1000",
+                "--do_eval",
+                "--validation_file", "/workspace/poetry2021.gt/data/pan_tadeusz5/dataset/pan_tadeusz.sampled1.txt",
+                "--evaluation_strategy", "steps",
+                "--eval_steps", "1000",
+                "--per_device_train_batch_size", "6",
+                "--per_device_eval_batch_size", "3"
+            ]
+        },
+        {
+            "name": "Python: pan_tadeusz4_mlm_stem",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspace/poetry2021.gt/src/experiments/pan_tadeusz4_mlm_stem/run_mlm.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--output_dir",
+                "/workspace/poetry2021.gt/runs/pan_tadeusz4/run_1",
+                "--overwrite_output_dir",
+                "--model_type",
+                "roberta",
+                "--config_name",
+                "/workspace/poetry2021.gt/data/pan_tadeusz4/model_config",
+                "--tokenizer_name",
+                "/workspace/poetry2021.gt/data/pan_tadeusz4/tokenizer",
+                "--max_seq_length",
+                "128",
+                "--line_by_line",
+                "--train_file",
+                "/workspace/poetry2021.gt/data/pan_tadeusz4/dataset/pan_tadeusz.syl1.txt",
+                "--do_train",
+                "--per_device_train_batch_size",
+                "4"
+            ]
+        }
+    ]
+}
