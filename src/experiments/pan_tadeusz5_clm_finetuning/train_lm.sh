@@ -1,6 +1,6 @@
 home_dir=/root/poetry2021
 # home_dir=/workspace/poetry2021.gt
-run=1
+run=2
 
 # TODO: + use small GPT2 model, + use pan_tadeusz dataset
 PYTHONIOENCODING=UTF-8 python3 run_clm.py \
@@ -15,7 +15,7 @@ PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --save_total_limit 2 \
     --save_steps 1000 \
     --logging_steps 10 \
-    --num_train_epochs 100 \
+    --num_train_epochs 1000 \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 3
 
