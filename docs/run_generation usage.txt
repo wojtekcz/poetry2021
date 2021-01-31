@@ -1,0 +1,43 @@
+usage: run_generation.py [-h] --model_type MODEL_TYPE --model_name_or_path
+                         MODEL_NAME_OR_PATH [--prompt PROMPT]
+                         [--length LENGTH] [--stop_token STOP_TOKEN]
+                         [--temperature TEMPERATURE]
+                         [--repetition_penalty REPETITION_PENALTY] [--k K]
+                         [--p P] [--prefix PREFIX]
+                         [--padding_text PADDING_TEXT]
+                         [--xlm_language XLM_LANGUAGE] [--seed SEED]
+                         [--no_cuda]
+                         [--num_return_sequences NUM_RETURN_SEQUENCES]
+                         [--fp16]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --model_type MODEL_TYPE
+                        Model type selected in the list: gpt2, ctrl, openai-
+                        gpt, xlnet, transfo-xl, xlm
+  --model_name_or_path MODEL_NAME_OR_PATH
+                        Path to pre-trained model or shortcut name selected in
+                        the list: gpt2, ctrl, openai-gpt, xlnet, transfo-xl,
+                        xlm
+  --prompt PROMPT
+  --length LENGTH
+  --stop_token STOP_TOKEN
+                        Token at which text generation is stopped
+  --temperature TEMPERATURE
+                        temperature of 1.0 has no effect, lower tend toward
+                        greedy sampling
+  --repetition_penalty REPETITION_PENALTY
+                        primarily useful for CTRL model; in that case, use 1.2
+  --k K
+  --p P
+  --prefix PREFIX       Text added prior to input.
+  --padding_text PADDING_TEXT
+                        Deprecated, the use of `--prefix` is preferred.
+  --xlm_language XLM_LANGUAGE
+                        Optional language when used with the XLM model.
+  --seed SEED           random seed for initialization
+  --no_cuda             Avoid using CUDA when available
+  --num_return_sequences NUM_RETURN_SEQUENCES
+                        The number of samples to generate.
+  --fp16                Whether to use 16-bit (mixed) precision (through
+                        NVIDIA apex) instead of 32-bit
