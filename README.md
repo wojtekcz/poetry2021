@@ -34,7 +34,7 @@ python3 preprocess_dataset.py
 python3 roberta_train_script.py
 
 # tensorboard
-tensorboard --bind_all --logdir runs/
+tensorboard --bind_all --logdir poetry2021/runs/
 
 # run eval
 python3 evaluate.py
