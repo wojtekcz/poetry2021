@@ -10,7 +10,7 @@ PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --logging_dir ${home_dir}/runs/pan_tadeusz5/run_${run}_logs \
     --overwrite_output_dir \
     --config_name ${home_dir}/data/pan_tadeusz5/model_config2 \
-    --tokenizer_name ${home_dir}/data/pan_tadeusz5/tokenizer2 \
+    --tokenizer_name ${home_dir}/data/pan_tadeusz5/tokenizer \
     --fp16 \
     --seed 42 \
     --save_total_limit 2 \
