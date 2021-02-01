@@ -37,6 +37,7 @@ from transformers import (
     XLMWithLMHeadModel,
     XLNetLMHeadModel,
     XLNetTokenizer,
+    AutoTokenizer,
 )
 
 
@@ -168,6 +169,8 @@ def main():
         help="Path to pre-trained model or shortcut name selected in the list: " + ", ".join(MODEL_CLASSES.keys()),
     )
 
+    parser.add_argument("--tokenizer_name", default=None, type=str, required=False, help="Pretrained tokenizer name or path if not the same as model_name")
+
     parser.add_argument("--prompt", type=str, default="")
     parser.add_argument("--length", type=int, default=20)
     parser.add_argument("--stop_token", type=str, default=None, help="Token at which text generation is stopped")
@@ -217,7 +220,11 @@ def main():
     except KeyError:
         raise KeyError("the model {} you specified is not supported. You are welcome to add it and open a PR :)")
 
-    tokenizer = tokenizer_class.from_pretrained(args.model_name_or_path)
+    if args.tokenizer_name:
+        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_name)
+    else:
+        tokenizer = tokenizer_class.from_pretrained(args.model_name_or_path)
+
     model = model_class.from_pretrained(args.model_name_or_path)
     model.to(args.device)
 
