@@ -26,6 +26,8 @@ mkdir -p $dataset_path
 cd $dataset_path
 wget --no-clobber -P $dataset_path https://github.com/wojtekcz/poetry2021/releases/download/v0.2/pan_tadeusz.ds7.tgz
 tar xzf pan_tadeusz.ds7.tgz
+wget --no-clobber -P $dataset_path https://github.com/wojtekcz/poetry2021/releases/download/v0.2/polish_lm.ds7.tgz
+tar xzf polish_lm.ds7.tgz
 
 ## download language model
 lm_path=/content/poetry2021/data/pan_tadeusz7_lm_models
