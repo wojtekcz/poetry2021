@@ -14,7 +14,8 @@ data_path = Path('/workspace/poetry2021.gt/data') / 'pan_tadeusz6'
 dataset_path = data_path / 'dataset'
 
 # corpus_path = dataset_path / 'poezja stara - Mickiewicz'
-corpus_path = dataset_path / 'fixes'
+# corpus_path = data_path / 'dataset_fixes'
+corpus_path = data_path / 'dataset'
 # fn_corpus_char = corpus_path / 'pan_tadeusz.txt'
 
 # fn_corpus_caps = processed_path / 'pan_tadeusz.caps1.txt'
@@ -75,7 +76,7 @@ class DatasetPreprocessor:
         print(fn_corpus_sampled)
 
 
-processed_path = data_path / 'processed_dataset/fixes'
+processed_path = data_path / 'processed_dataset'
 caps_path = processed_path / 'caps'
 syl_path = processed_path / 'syl'
 sampled_path = processed_path / 'sampled'
@@ -89,7 +90,7 @@ paths = [x for x in corpus_path.glob("**/*.txt")]
 # paths = [x for x in dataset_path.glob("**/*.txt")]
 pprint(paths)
 
-preprocessor = DatasetPreprocessor(data_path)
+preprocessor = DatasetPreprocessor(dataset_path)
 
 # print(f'Corpus: {fn_corpus_char}')
 # print_head(fn_corpus_char)
