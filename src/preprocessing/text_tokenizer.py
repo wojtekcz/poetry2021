@@ -14,7 +14,7 @@ class TextTokenizer:
         # remove _ char to keep tokens intact
         # remove <,> chars to keep tokens intact
         punctuation = re.sub('[##_\\+-<>]', '', string.punctuation)
-        self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])')
+        self.re_tok = re.compile(f'([{punctuation}“”¨«»®´·º½¾¿¡§£₤‘’])—’“”…*‘\'^')
 
         self.dataset_path = dataset_path
         self.tmp_path = dataset_path / 'tmp'
@@ -34,7 +34,7 @@ class TextTokenizer:
 
     @staticmethod
     def separate_punctuation(a_str: str) -> str:
-        punct_chars = set(':;.,!(){}«»"?')
+        punct_chars = set(':;.,!(){}«»"?„—’“”…*‘\'^')
         a_str = ''.join([f' {x} ' if x in punct_chars else x for x in a_str])
         return re.sub(' +', ' ', a_str)
 
@@ -143,7 +143,8 @@ class TextTokenizer:
             (' )', ')'),
             (' «', '«'),
             ('» ', '»'),
-            (' :', ':')
+            (' :', ':'),
+            ('„ ', '„'),
         ]
 
         for repl in repl_list:
