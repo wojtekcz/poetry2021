@@ -3,7 +3,7 @@
 
 from pathlib import Path
 from preprocessing.stemmer import Stemmer
-from preprocessing.line_chunker import LineChunker
+from preprocessing.line_chunker import LineChunker, flatten
 from preprocessing.text_processor import TextProcessor
 from preprocessing.text_tokenizer import TextTokenizer
 from typing import List
@@ -12,14 +12,14 @@ from pprint import pprint
 
 data_path = Path('/workspace/poetry2021.gt/data') / 'pan_tadeusz6'
 dataset_path = data_path / 'dataset'
-processed_path = data_path / 'processed_dataset'
 
-corpus_path = dataset_path / 'poezja stara - Mickiewicz'
-fn_corpus_char = corpus_path / 'pan_tadeusz.txt'
+# corpus_path = dataset_path / 'poezja stara - Mickiewicz'
+corpus_path = dataset_path / 'fixes'
+# fn_corpus_char = corpus_path / 'pan_tadeusz.txt'
 
-fn_corpus_caps = processed_path / 'pan_tadeusz.caps1.txt'
-fn_corpus_syl = processed_path / 'pan_tadeusz.syl1.txt'
-fn_corpus_sampled = processed_path / 'pan_tadeusz.sampled1.txt'
+# fn_corpus_caps = processed_path / 'pan_tadeusz.caps1.txt'
+# fn_corpus_syl = processed_path / 'pan_tadeusz.syl1.txt'
+# fn_corpus_sampled = processed_path / 'pan_tadeusz.sampled1.txt'
 
 vocab_path = data_path / 'vocab.json'
 stem_delim = '++ --'
@@ -35,19 +35,26 @@ class DatasetPreprocessor:
         self.tokenizer = TextTokenizer(dataset_path)
         self.processor = TextProcessor(dataset_path, self.tokenizer)
 
-    def tokenize_caps(self, fn_corpus_char: Path, fn_corpus_caps: Path):
-        print(f'\nTokenizacja wielkich liter: {fn_corpus_caps.name}')
+    def tokenize_caps(self, fn_corpus_char: Path, fn_corpus_caps: Path, verbose: True):
+        if verbose:
+            print(f'\nTokenizacja wielkich liter: {fn_corpus_caps.name}')
         self.processor.do_caps_file(fn_corpus_char, fn_corpus_caps)
-        print_head(fn_corpus_caps)
+        if verbose:
+            print_head(fn_corpus_caps)
 
-    def stem_corpus(self, fn_corpus_caps: Path, fn_corpus_syl: Path, stem_delim: str):
-        print(f'\nPodział korpusu na sylaby "{stem_delim}"')
+    def stem_corpus(self, fn_corpus_caps: Path, fn_corpus_syl: Path, stem_delim: str, verbose: True):
+        if verbose:
+            print(f'\nPodział korpusu na sylaby "{stem_delim}"')
         Stemmer.stem_file(fn_corpus_caps, fn_corpus_syl, stem_delim=stem_delim)
-        print_head(fn_corpus_syl)
+        if verbose:
+            print_head(fn_corpus_syl)
 
     def load_and_create_vocab(self, fn_corpus_syl: Path, vocab_path: Path) -> List[str]:
         # Załadowanie do pamięci i tokenizacja
-        file_tok = self.processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
+        if fn_corpus_syl.is_dir():
+            file_tok = flatten([self.processor.load_and_tokenize_file(x, repl_unk=False) for x in fn_corpus_syl.glob('*.txt')])
+        else:
+            file_tok = self.processor.load_and_tokenize_file(fn_corpus_syl, repl_unk=False)
 
         # create & save vocab
         self.tokenizer.create_vocab(file_tok)
@@ -68,25 +75,39 @@ class DatasetPreprocessor:
         print(fn_corpus_sampled)
 
 
-processed_path.mkdir(parents=True, exist_ok=True)
+processed_path = data_path / 'processed_dataset/fixes'
+caps_path = processed_path / 'caps'
+syl_path = processed_path / 'syl'
+sampled_path = processed_path / 'sampled'
 
-paths = [str(x) for x in corpus_path.glob("**/*.txt")]
+caps_path.mkdir(parents=True, exist_ok=True)
+syl_path.mkdir(parents=True, exist_ok=True)
+sampled_path.mkdir(parents=True, exist_ok=True)
+
+print('Files to preprocess:')
+paths = [x for x in corpus_path.glob("**/*.txt")]
+# paths = [x for x in dataset_path.glob("**/*.txt")]
 pprint(paths)
-
-# paths = [str(x) for x in dataset_path.glob("**/*.txt")]
-# pprint(paths)
-
-exit(0)
 
 preprocessor = DatasetPreprocessor(data_path)
 
-print(f'Corpus: {fn_corpus_char}')
-print_head(fn_corpus_char)
+# print(f'Corpus: {fn_corpus_char}')
+# print_head(fn_corpus_char)
 
-preprocessor.tokenize_caps(fn_corpus_char, fn_corpus_caps)
-preprocessor.stem_corpus(fn_corpus_caps, fn_corpus_syl, stem_delim=stem_delim)
+if True:
+    for char_path in paths:
+        print(f'tokenizing caps and stemming: {char_path.name}')
+        corpus_caps_path = caps_path / f'{char_path.stem}.caps1.txt'
+        corpus_syl_path = syl_path / f'{char_path.stem}.syl1.txt'
 
-file_tok = preprocessor.load_and_create_vocab(fn_corpus_syl, vocab_path)
+        preprocessor.tokenize_caps(char_path, corpus_caps_path, verbose=False)
+        preprocessor.stem_corpus(corpus_caps_path, corpus_syl_path, stem_delim=stem_delim, verbose=False)
+
+print(f'creating vocab: {vocab_path}')
+file_tok = preprocessor.load_and_create_vocab(syl_path, vocab_path)
+
+exit(0)
+
 tokenizer = preprocessor.tokenizer
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
