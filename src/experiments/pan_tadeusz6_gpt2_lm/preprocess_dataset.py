@@ -124,7 +124,8 @@ print(e_str)
 print(tokenizer.format_html(e_str))
 
 min_n_samples = 10000  # 50000
-max_n_samples = 10000
+max_n_samples = None
 chunk_len = 100  # 400
 fn_corpus_sampled = sampled_path / f'dataset.sampled1.{max_n_samples}.txt'
+fn_corpus_sampled = sampled_path / f'dataset.sampled1.all.txt'
 preprocessor.create_sampled_file(file_tok, fn_corpus_sampled, min_n_samples=min_n_samples, max_n_samples=max_n_samples, chunk_len=chunk_len)
