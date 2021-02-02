@@ -68,3 +68,7 @@ cd src/experiments/pan_tadeusz3_mlm_stem
 
 cd src/experiments/pan_tadeusz4_mlm_stem
 ./train_lm.sh
+
+cd src/experiments/pan_tadeusz6_gpt2_lm
+./install.sh
+./train_lm.sh

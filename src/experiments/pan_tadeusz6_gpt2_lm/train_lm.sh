@@ -1,5 +1,5 @@
-# home_dir=/root/poetry2021
-home_dir=/workspace/poetry2021.gt
+home_dir=/root/poetry2021
+# home_dir=/workspace/poetry2021.gt
 run=1
 
 PYTHONIOENCODING=UTF-8 python3 run_clm.py \
@@ -11,6 +11,7 @@ PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --overwrite_output_dir \
     --config_name ${home_dir}/data/pan_tadeusz6/model_config \
     --tokenizer_name ${home_dir}/data/pan_tadeusz6/tokenizer \
+    --fp16 \
     --seed 42 \
     --save_total_limit 2 \
     --save_steps 1000 \
@@ -23,7 +24,6 @@ PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --per_device_train_batch_size 6 \
     --per_device_eval_batch_size 3
 
-    # --fp16 \
     # --model_name_or_path gpt2 \
     # --model_name_or_path ${home_dir}/runs/pan_tadeusz6/run_1/checkpoint-6000 \
     # --disable_tqdm False
