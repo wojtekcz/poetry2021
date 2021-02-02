@@ -1,11 +1,11 @@
 home_dir=/root/poetry2021
 # home_dir=/workspace/poetry2021.gt
-run=1
+run=2
 
 PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --model_type gpt2 \
     --do_train \
-    --train_file ${home_dir}/data/pan_tadeusz6/processed_dataset/sampled/dataset.sampled1.10000.txt \
+    --train_file ${home_dir}/data/pan_tadeusz6/processed_dataset/sampled/dataset.sampled1.all.txt \
     --output_dir ${home_dir}/runs/pan_tadeusz6/run_${run} \
     --logging_dir ${home_dir}/runs/pan_tadeusz6/run_${run}_logs \
     --overwrite_output_dir \
@@ -16,7 +16,7 @@ PYTHONIOENCODING=UTF-8 python3 run_clm.py \
     --save_total_limit 2 \
     --save_steps 1000 \
     --logging_steps 10 \
-    --num_train_epochs 1000 \
+    --num_train_epochs 100 \
     --do_eval \
     --validation_file ${home_dir}/data/pan_tadeusz6/processed_dataset/syl/pan_tadeusz.syl1.txt \
     --evaluation_strategy 'steps' \
