@@ -8,6 +8,7 @@ from preprocessing.text_processor import TextProcessor
 from preprocessing.text_tokenizer import TextTokenizer
 from typing import List
 from pprint import pprint
+from tqdm import tqdm
 
 
 data_path = Path('/workspace/poetry2021.gt/data') / 'pan_tadeusz6'
@@ -62,16 +63,18 @@ class DatasetPreprocessor:
         self.tokenizer.save_vocab(vocab_path)
         return file_tok
 
-    def create_sampled_file(self, file_tok: List[str], fn_corpus_sampled: Path, min_n_samples: int, chunk_len: int):
+    def create_sampled_file(self, file_tok: List[str], fn_corpus_sampled: Path, min_n_samples: int, max_n_samples=None, chunk_len=100):
         print(f"\nLet's make dataset with more than minimum {min_n_samples} samples")
         line_chunker = LineChunker(file_tok=file_tok, chunk_len=chunk_len)
         n_samples = len(file_tok) // chunk_len
         print(f'n_samples: {n_samples}')
         n_samples = max(min_n_samples, n_samples)
+        if max_n_samples is not None:
+            n_samples = min(max_n_samples, n_samples)
         print(f'chunk_len: {chunk_len}')
         print(f'n_samples: {n_samples}')
 
-        sampled_chunks = [" ".join(line_chunker.random_chunk()) for _ in range(n_samples)]
+        sampled_chunks = [" ".join(line_chunker.random_chunk()) for _ in tqdm(range(n_samples))]
         fn_corpus_sampled.write_text("\n".join(sampled_chunks))
         print(fn_corpus_sampled)
 
@@ -95,7 +98,7 @@ preprocessor = DatasetPreprocessor(dataset_path)
 # print(f'Corpus: {fn_corpus_char}')
 # print_head(fn_corpus_char)
 
-if True:
+if False:
     for char_path in paths:
         print(f'tokenizing caps and stemming: {char_path.name}')
         corpus_caps_path = caps_path / f'{char_path.stem}.caps1.txt'
@@ -106,9 +109,6 @@ if True:
 
 print(f'creating vocab: {vocab_path}')
 file_tok = preprocessor.load_and_create_vocab(syl_path, vocab_path)
-
-exit(0)
-
 tokenizer = preprocessor.tokenizer
 
 text = 'LITWO! Ojczyzno moja!\nTy jesteś jak zdrowie.\nIle cię trzeba cenić ble ble '
@@ -123,6 +123,8 @@ e_str = tokenizer.fix_punctuation(text_decoded)[:400]
 print(e_str)
 print(tokenizer.format_html(e_str))
 
-min_n_samples = 1000  # 50000
+min_n_samples = 10000  # 50000
+max_n_samples = 10000
 chunk_len = 100  # 400
-preprocessor.create_sampled_file(file_tok, fn_corpus_sampled, min_n_samples, chunk_len)
+fn_corpus_sampled = sampled_path / f'dataset.sampled1.{max_n_samples}.txt'
+preprocessor.create_sampled_file(file_tok, fn_corpus_sampled, min_n_samples=min_n_samples, max_n_samples=max_n_samples, chunk_len=chunk_len)
