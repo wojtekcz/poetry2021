@@ -33,5 +33,5 @@ tar xzf polish_lm.ds7.tgz
 lm_path=/content/poetry2021/data/pan_tadeusz7_lm_models
 mkdir -p $lm_path
 cd $lm_path
-wget --no-clobber -P $lm_path https://github.com/wojtekcz/poetry2021/releases/download/v0.2/model1000.tgz
-tar xzf model1000.tgz
+wget --no-clobber -P $lm_path https://github.com/wojtekcz/poetry2021/releases/download/v0.2/model17000.tgz
+tar xzf model17000.tgz
